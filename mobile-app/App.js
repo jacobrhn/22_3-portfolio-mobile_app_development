@@ -10,20 +10,8 @@ const data = [
 
 export default function App() {
 
-  
-  // Use State importieren
-  //  -->  useState() --> 2 Werte zurückgeben
-  // inititaler Zustand festlegen
-  // const useStateArray = useState(0);
-  // console.log('useStateArray: ', useStateArray); // [0, function]
-  // zustandsobjekt aus dem useStateArray extrahieren und speichern
-  // const index = useStateArray[0];
-  // index aus dem useStateArray als index verwenden
-  // const quote = data[index]; // inititaler Zustand --> soll aber aktuellen Zustand darstellen
-  // änderungsfunktion aus useStateArray extrahieren und speichern
-  // const setIndex = useStateArray[1];
-  // state mit der änderungsfunktion ändern --> in button 
-
+  const [index, setIndex] = useState(0); // --> [0, function]
+  const quote = data[index]; 
 
   return (
     <SafeAreaView style={styles.appContainer}>
@@ -33,7 +21,7 @@ export default function App() {
       <View style={styles.mainContainer}>
         <Text>{quote.text}</Text>
         <Text>{quote.text_2}</Text>
-        <Button title="Alert" onPress={() => setIndex((index +1) % data.length)} />
+        <Button title="Next Quote" onPress={() => setIndex((index +1) % data.length)} />
         </View>
       <View style={styles.footerContainer}>
         <Text>3 Open up App.js to start working on your app!</Text>
