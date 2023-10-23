@@ -13,6 +13,11 @@ export default function App() {
   const [index, setIndex] = useState(0); // --> [0, function]
   const quote = data[index]; 
 
+  let prevIndex = index - 1;
+  if (prevIndex < 0) {
+    prevIndex = data.length - 1;
+  }
+
   return (
     <SafeAreaView style={styles.appContainer}>
       <View style={styles.headerContainer}>
@@ -20,8 +25,10 @@ export default function App() {
       </View>
       <View style={styles.mainContainer}>
         <Text>{quote.text}</Text>
-        <Text>{quote.text_2}</Text>
+        <Text>{quote.text_2}</Text>        
         <Button title="Next Quote" onPress={() => setIndex((index +1) % data.length)} />
+        <Button title="Previous Quote" onPress={() => setIndex(prevIndex)} />
+
         </View>
       <View style={styles.footerContainer}>
         <Text>3 Open up App.js to start working on your app!</Text>
