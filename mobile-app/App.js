@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import Quote from './components/Quote';
 
 const data = [
   {id: 1, text: "text1.1", text_2: "text1.2", category: "category1"},
@@ -24,8 +25,7 @@ export default function App() {
         <Text>1 Open up App.js to start working on your app!</Text>
       </View>
       <View style={styles.mainContainer}>
-        <Text>{quote.text}</Text>
-        <Text>{quote.text_2}</Text>        
+        <Quote quote={quote} />        
         <Button title="Next Quote" onPress={() => setIndex((index +1) % data.length)} />
         <Button title="Previous Quote" onPress={() => setIndex(prevIndex)} />
 
