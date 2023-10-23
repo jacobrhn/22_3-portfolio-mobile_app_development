@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
 import Quote from './components/Quote';
 
 const data = [
@@ -25,10 +25,16 @@ export default function App() {
         <Text>1 Open up App.js to start working on your app!</Text>
       </View>
       <View style={styles.mainContainer}>
-        <Quote quote={quote} />        
-        <Button title="Next Quote" onPress={() => setIndex((index +1) % data.length)} />
-        <Button title="Previous Quote" onPress={() => setIndex(prevIndex)} />
-
+        <Quote text={quote.text} text_2={quote.text_2} />        
+        <Pressable 
+          onPress={() => setIndex((index +1) % data.length)}
+          style={}
+        >
+          <Text>Next Quote</Text>
+        </Pressable>
+        <Pressable onPress={() => setIndex(prevIndex)}>
+          <Text>Previous Quote</Text>
+        </Pressable>
         </View>
       <View style={styles.footerContainer}>
         <Text>3 Open up App.js to start working on your app!</Text>
@@ -41,27 +47,24 @@ export default function App() {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    alignItems: 'center',
+    //alignItems: 'center',
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //alignItems: 'center',
+    //justifyContent: 'center',
     width: '100%'
   },
   headerContainer: {
     flex: 1 / 9,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   mainContainer: {
     flex: 7 / 9,
     backgroundColor: 'darkgray',
-    alignItems: 'center',
     justifyContent: 'center',
     width: '100%'
+
   },
   footerContainer: {
     flex: 1 / 9,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
+
 });
