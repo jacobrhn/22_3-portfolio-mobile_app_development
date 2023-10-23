@@ -9,21 +9,19 @@ const data = [
 ];  
 
 export default function App() {
+
+  
   // Use State importieren
   //  -->  useState() --> 2 Werte zurückgeben
-  
   // inititaler Zustand festlegen
-  const useStateArray = useState(0);
-  console.log('useStateArray: ', useStateArray); // [0, function]
-
+  // const useStateArray = useState(0);
+  // console.log('useStateArray: ', useStateArray); // [0, function]
   // zustandsobjekt aus dem useStateArray extrahieren und speichern
-  const index = useStateArray[0];
-
+  // const index = useStateArray[0];
   // index aus dem useStateArray als index verwenden
-  const quote = data[index]; // inititaler Zustand --> soll aber aktuellen Zustand darstellen
-
+  // const quote = data[index]; // inititaler Zustand --> soll aber aktuellen Zustand darstellen
   // änderungsfunktion aus useStateArray extrahieren und speichern
-  const setIndex = useStateArray[1];
+  // const setIndex = useStateArray[1];
   // state mit der änderungsfunktion ändern --> in button 
 
 
