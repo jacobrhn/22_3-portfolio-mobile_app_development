@@ -31,24 +31,26 @@ export default function App() {
 
   addCardtoData = (text, text_2, text_3, category) => {
     setShowInputDialog(false);
-    const newCards = [
+    const updatedCards = [
       ...cards, 
       {text, text_2, text_3, category}
     ];
-    setCards(newCards);
-    setIndex(newCards.length - 1);
-    saveCards(newCards);
+    setCards(updatedCards);
+    setIndex(updatedCards.length - 1);
+    saveCards(updatedCards);
   }
   
-  function saveCards(newCards) {
-    console.log('saveCards() \n', newCards);
-    AsyncStorage.setItem('CARDS', JSON.stringify(newCards));
+  function saveCards(updatedCards) {
+    //console.log(new Date().toISOString(), 'saveCards() \n', updatedCards);
+    updatedCards = JSON.stringify(updatedCards);
+    AsyncStorage.setItem('CARDS', updatedCards);
   }
 
   async function loadCards() {
     let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
     if (quotesFromDb) {
-      console.log(quotesFromDb);
+      //console.log(new Date().toISOString(), 'loadCards() \n', quotesFromDb);
+      setCards(JSON.parse(quotesFromDb));
     }
   }
 
