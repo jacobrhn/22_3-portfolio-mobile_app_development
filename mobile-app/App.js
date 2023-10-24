@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +20,9 @@ export default function App() {
   const [cards, setCards] = useState(data);
   const [index, setIndex] = useState(0);
   const [showInputDialog, setShowInputDialog] = useState(false);
+
+  useEffect(() => {loadCards()}, []);
+
   const card = cards[index]; 
   let prevIndex = index - 1;
   if (prevIndex < 0) {
@@ -34,6 +37,19 @@ export default function App() {
     ];
     setCards(newCards);
     setIndex(newCards.length - 1);
+    saveCards(newCards);
+  }
+  
+  function saveCards(newCards) {
+    console.log('saveCards() \n', newCards);
+    AsyncStorage.setItem('CARDS', JSON.stringify(newCards));
+  }
+
+  async function loadCards() {
+    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
+    if (quotesFromDb) {
+      console.log(quotesFromDb);
+    }
   }
 
   return (
