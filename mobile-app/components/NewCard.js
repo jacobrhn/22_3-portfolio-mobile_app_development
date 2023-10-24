@@ -7,6 +7,7 @@ import{ Modal,
         Platform,
         KeyboardAvoidingView
     } from 'react-native'
+import TextButton from './TextButton';
 
 export default function NewCard({visible, onCancel, onSave}) {
     const [inputText1, setInputText1] = useState(null);
@@ -36,9 +37,11 @@ export default function NewCard({visible, onCancel, onSave}) {
                 {/**
                  *  // TODO: add text3 and category 
                  */}
-                <Pressable onPress={() => {onCancel()}}>
-                    <Text style={{fontSize:20}}>Cancel</Text>
-                </Pressable>
+                <TextButton text='Cancel' onPress={() => {onCancel()}} pale={true}/>
+                <TextButton 
+                    text='Save' 
+                    onPress={() => {onSave(inputText1, inputText2, inputText3, inputCategory)}}
+                />
             </KeyboardAvoidingView>
         </Modal>
     )

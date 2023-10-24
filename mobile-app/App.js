@@ -4,6 +4,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
 import Card from './components/Card';
 import NewCard from './components/NewCard';
+import TextButton from './components/TextButton';
 
 const data = [
   {text: "text1.1", text_2: "text1.2", text_3: "text1.3", category: "category1"},
@@ -28,6 +29,16 @@ export default function App() {
     prevIndex = cards.length - 1;
   }
 
+  addCardtoData = (text, text_2, text_3, category) => {
+    setShowInputDialog(false);
+    const newCards = [
+      ...cards, 
+      {text, text_2, text_3, category}
+    ];
+    setCards(newCards);
+    setIndex(newCards.length - 1);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       
@@ -44,17 +55,7 @@ export default function App() {
         <NewCard 
           visible={showInputDialog} 
           onCancel={() => setShowInputDialog(false)}
-          onSave={
-            (inputText1, inputText2, inputText3, inputCategory) => {
-              setShowInputDialog(false);
-              // geg. daten aus inputfeldern in data speichern
-              const newCards = [
-                ...cards, 
-                {text: inputText1, text_2: inputText2, text_3: inputText3, category: inputCategory}
-              ];
-              setCards(newCards);
-            }
-          }
+          onSave={addCardtoData}
         />
         <Card text={card.text} text_2={card.text_2} />
       </View>
@@ -69,12 +70,7 @@ export default function App() {
         size={30} 
         color="#4a4a8f" />
       </Pressable>
-      <Pressable 
-        onPress={() => alert('Enter Answer')}
-        style={[styles.pressable, {alignSelf: 'center'}]}
-      >
-        <Text style={styles.pressableCardNavText}>Answer</Text>
-      </Pressable>
+      <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />
       <Pressable
         onPress={() => setIndex((index +1) % cards.length)}
         style={[styles.pressableIconNextCard]}
@@ -112,6 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     width: '100%',
     height: '10%',
+    alignItems: 'center',
   },
   pressable: {
     backgroundColor: '#4a4a8f',
