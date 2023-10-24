@@ -1,6 +1,6 @@
 import { Text , StyleSheet, View} from "react-native";
 
-export default function Quote({ text, text_2} ) {
+export default function Card ({ text, text_2} ) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>

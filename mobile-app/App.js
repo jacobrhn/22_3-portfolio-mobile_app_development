@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
-import Quote from './components/Quote';
+import Card from './components/Card';
 import NewCard from './components/NewCard';
 
 const data = [
-  {id: 1, text: "text1.1", text_2: "text1.2", category: "category1"},
-  {id: 2, text: "text2.1", text_2: "text2.2", category: "category2"},
-  {id: 3, text: "text3.1", text_2: "text3.2", category: "category3"},
+  {text: "text1.1", text_2: "text1.2", text_3: "text1.3", category: "category1"},
+  {text: "Glück ist wie Pupsen, wenn man es erzwingt wirds Scheiße...", text_2: "Napoleon Bonaparte", text_3:"text2.3", category: "category2"},
+  {text: "text3.1", text_2: "text3.2",text_3: "text3.3", category: "category3"},
 ];  
 
 function newCard() {
@@ -17,23 +17,22 @@ function newCard() {
 
 export default function App() {
 
-  const [index, setIndex] = useState(0); // --> [0, function]
-  const [showInputDialog, setShowInputDialog] = useState(false); // --> [0, function]
-  // showInputDialog = false;
-  console.log('showInputDialog:', showInputDialog)
-  const quote = data[index]; 
+  const [cards, setCards] = useState(data);
+  const [index, setIndex] = useState(0);
+  const [showInputDialog, setShowInputDialog] = useState(false);
 
-  
+  const card = cards[index]; 
+
   let prevIndex = index - 1;
   if (prevIndex < 0) {
-    prevIndex = data.length - 1;
+    prevIndex = cards.length - 1;
   }
 
   return (
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-      <Text style={styles.text}>Quote App</Text>
+      <Text style={styles.text}>card App</Text>
         <Pressable 
           onPress={() => setShowInputDialog(true)}
           style={styles.pressableIconNewCard}>
@@ -42,8 +41,22 @@ export default function App() {
       </View>
 
       <View style={styles.cardDisplayContainer}>
-        <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)}/>
-        <Quote text={quote.text} text_2={quote.text_2} />
+        <NewCard 
+          visible={showInputDialog} 
+          onCancel={() => setShowInputDialog(false)}
+          onSave={
+            (inputText1, inputText2, inputText3, inputCategory) => {
+              setShowInputDialog(false);
+              // geg. daten aus inputfeldern in data speichern
+              const newCards = [
+                ...cards, 
+                {text: inputText1, text_2: inputText2, text_3: inputText3, category: inputCategory}
+              ];
+              setCards(newCards);
+            }
+          }
+        />
+        <Card text={card.text} text_2={card.text_2} />
       </View>
       
       <View style={styles.cardNavigationContainer}>    
@@ -63,7 +76,7 @@ export default function App() {
         <Text style={styles.pressableCardNavText}>Answer</Text>
       </Pressable>
       <Pressable
-        onPress={() => setIndex((index +1) % data.length)}
+        onPress={() => setIndex((index +1) % cards.length)}
         style={[styles.pressableIconNextCard]}
       >
       <MaterialCommunityIcons name='step-forward' size={30} color='#4a4a8f' />
