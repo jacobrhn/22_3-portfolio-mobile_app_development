@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
 import Card from './components/Card';
 import NewCard from './components/NewCard';
 import TextButton from './components/TextButton';
+import IconButton from './components/IconButton';
 
 const data = [
   {text: "text1.1", text_2: "text1.2", text_3: "text1.3", category: "category1"},
@@ -21,9 +22,7 @@ export default function App() {
   const [cards, setCards] = useState(data);
   const [index, setIndex] = useState(0);
   const [showInputDialog, setShowInputDialog] = useState(false);
-
   const card = cards[index]; 
-
   let prevIndex = index - 1;
   if (prevIndex < 0) {
     prevIndex = cards.length - 1;
@@ -43,40 +42,19 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-      <Text style={styles.text}>card App</Text>
-        <Pressable 
-          onPress={() => setShowInputDialog(true)}
-          style={styles.pressableIconNewCard}>
-          <MaterialIcons name="note-add" size={30} color="#4a4a8f" />
-        </Pressable>
+        <Text style={styles.text}>card App</Text>
+        <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
       </View>
 
       <View style={styles.cardDisplayContainer}>
-        <NewCard 
-          visible={showInputDialog} 
-          onCancel={() => setShowInputDialog(false)}
-          onSave={addCardtoData}
-        />
+        <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
         <Card text={card.text} text_2={card.text_2} />
       </View>
       
       <View style={styles.cardNavigationContainer}>    
-      <Pressable
-        onPress={() => setIndex(prevIndex)}
-        style={[styles.pressableIconPreviousCard]}
-      >
-      <MaterialCommunityIcons 
-        name="step-backward" 
-        size={30} 
-        color="#4a4a8f" />
-      </Pressable>
+      <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} />
       <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />
-      <Pressable
-        onPress={() => setIndex((index +1) % cards.length)}
-        style={[styles.pressableIconNextCard]}
-      >
-      <MaterialCommunityIcons name='step-forward' size={30} color='#4a4a8f' />
-      </Pressable>
+      <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]} />
       </View>
     <StatusBar style="auto" />
   </SafeAreaView>
@@ -110,27 +88,10 @@ const styles = StyleSheet.create({
     height: '10%',
     alignItems: 'center',
   },
-  pressable: {
-    backgroundColor: '#4a4a8f',
-    borderWidth: 1,
-    borderColor: '#4a4a8f',
-    padding: 10,
-    borderRadius: 9,
-    margin: 5,
-    alignItems: 'center',
-    width: 200,
-    top: 8,
-  },
-  pressableCardNavText: {
-    fontSize: 20,
-    color: 'white',
-    // fontWeight: 'bold',
-  },
   pressableIconNewCard: {
     position: 'absolute',
     right: 10,
     top: 20,
-  
   },
   pressableIconPreviousCard: {
     position: 'absolute',
