@@ -39,9 +39,19 @@ export default function App() {
     setIndex(updatedCards.length - 1);
     saveCards(updatedCards);
   }
+
+  function deleteCardFromData() {
+    let updatedCards = [...cards];
+    let cardToDelete = updatedCards.splice(index, 1);
+    console.log(new Date().toISOString(), 'cardToDelete \n', cardToDelete);
+    console.log(new Date().toISOString(), 'deleteCardFromData() \n', updatedCards);
+    setCards(updatedCards);
+    setIndex(0);
+    saveCards(updatedCards);
+  }
   
   function saveCards(updatedCards) {
-    //console.log(new Date().toISOString(), 'saveCards() \n', updatedCards);
+    console.log(new Date().toISOString(), 'saveCards() \n', updatedCards);
     updatedCards = JSON.stringify(updatedCards);
     AsyncStorage.setItem('CARDS', updatedCards);
   }
@@ -60,6 +70,7 @@ export default function App() {
       <View style={styles.topNavigationContainer}>
         <Text style={styles.text}>card App</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
+        <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>
       </View>
 
       <View style={styles.cardDisplayContainer}>
@@ -114,6 +125,11 @@ const styles = StyleSheet.create({
   pressableIconNextCard: {
     position: 'absolute',
     right: 10,
+    top: 20,
+  },
+  pressableIconDeleteCard: { 
+    position: 'absolute',
+    left: 10,
     top: 20,
   },
 });
