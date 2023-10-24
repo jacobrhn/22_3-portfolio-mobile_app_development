@@ -14,14 +14,31 @@ export default function NewCard({visible, onCancel, onSave}) {
     const [inputText2, setInputText2] = useState(null);
     const inputText3 = 'text3'; // to be implemented
     const inputCategory = 'category1'; // to be implemented
+
+    function cancelEditing() {
+        onCancel();
+        setInputText1("");
+        setInputText2("");
+    }
+
+    function saveCard() {
+        const trimmedText1 = inputText1.trim();
+        const trimmedText2 = inputText2.trim();
+        const trimmedText3 = inputText3.trim();
+        if (trimmedText1.length === 0 || trimmedText2.length === 0) {
+            alert('Please enter text1 and text2');
+            return;
+        };
+        onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
+    }
     return (
-        <Modal visible={visible} animationType="slide" onRequestClose={onCancel}>
+        <Modal visible={visible} animationType="slide" onRequestClose={cancelEditing}>
             <SafeAreaView flex={1} width={'100%'}>
                 <KeyboardAvoidingView 
                     style={styles.inputContainer}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
-                    <IconButton onPress={onCancel} style={styles.pressableIconBack} iconName='cancel'/>
+                    <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
                     <TextInput 
                         style={[styles.inputText, styles.inputText1]} 
                         placeholder='text1'
@@ -34,15 +51,15 @@ export default function NewCard({visible, onCancel, onSave}) {
                         placeholder='text2'
                         returnKeyType= 'done'
                         onChangeText={setInputText2}
-                        onSubmitEditing={() => {onSave(inputText1, inputText2, inputText3, inputCategory)}}
+                        onSubmitEditing={() => {saveCard()}}
                     />
                     {/**
                      *  // TODO: add text3 and category 
                      */}
-                    <TextButton text='Cancel' onPress={() => {onCancel()}} pale={true}/>
+                    <TextButton text='Cancel' onPress={() => {cancelEditing()}} pale={true}/>
                     <TextButton 
                         text='Save' 
-                        onPress={() => {onSave(inputText1, inputText2, inputText3, inputCategory)}}
+                        onPress={() => {saveCard()}}
                     />
                 </KeyboardAvoidingView>
             </SafeAreaView>

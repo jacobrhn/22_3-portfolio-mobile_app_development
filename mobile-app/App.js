@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Pressable} from 'react-native';
+
 import Card from './components/Card';
 import NewCard from './components/NewCard';
 import TextButton from './components/TextButton';
 import IconButton from './components/IconButton';
+
 
 const data = [
   {text: "text1.1", text_2: "text1.2", text_3: "text1.3", category: "category1"},
   {text: "Glück ist wie Pupsen, wenn man es erzwingt wirds Scheiße...", text_2: "Napoleon Bonaparte", text_3:"text2.3", category: "category2"},
   {text: "text3.1", text_2: "text3.2",text_3: "text3.3", category: "category3"},
 ];  
-
-function newCard() {
-  console.log("New Card");
-}
 
 export default function App() {
 
@@ -72,18 +69,15 @@ const styles = StyleSheet.create({
   topNavigationContainer: {
     width: '100%',
     length: '100%',
-    backgroundColor: 'gray',
     height: '10%',
   },
   cardDisplayContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
     width: '100%',
     height: '80%',
   },
   cardNavigationContainer: {
-    backgroundColor: 'gray',
     width: '100%',
     height: '10%',
     alignItems: 'center',
