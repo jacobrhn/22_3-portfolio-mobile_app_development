@@ -3,19 +3,27 @@ import{ Modal,
         StyleSheet,
         Text,
         TextInput,
-        View,
+        Platform,
+        KeyboardAvoidingView
     } from 'react-native'
 
 export default function NewCard({visible, onCancel}) {
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={onCancel}>
-            <View style={styles.inputContainer}>
-                <TextInput style={styles.inputText} placeholder='text1'/>
+            <KeyboardAvoidingView 
+                style={styles.inputContainer}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <TextInput 
+                    style={[styles.inputText, styles.inputText1]} 
+                    placeholder='text1'
+                    multiline={true}
+                />
                 <TextInput style={styles.inputText} placeholder='text2'/>
                 <Pressable onPress={() => {onCancel()}}>
                     <Text style={{fontSize:20}}>Cancel</Text>
                 </Pressable>
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
     )
 }
@@ -28,11 +36,16 @@ const styles = StyleSheet.create({
     },
     inputText: {
         borderWidth: 1,
-        borderBlockColor: '#4a4a8f',
+        borderColor: '#4a4a8f',
         borderRadius: 5,
         width: '80%',
         fontSize: 20,
         marginBottom: 10,
         padding: 10,
+        textAlignVertical: 'top',
+      },
+      inputText1: {
+        marginTop: 50,
+        height: 100,
       },
 })
