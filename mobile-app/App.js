@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Pressable} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from './components/Card';
 import NewCard from './components/NewCard';
