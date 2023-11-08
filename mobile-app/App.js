@@ -21,7 +21,7 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [showInputDialog, setShowInputDialog] = useState(false);
 
-  useEffect(() => {loadCards()}, []);
+  useEffect(() => {loadCards()}, []); // load cards from db ONLY on startup
 
   const card = cards[index]; 
   let prevIndex = index - 1;
@@ -35,31 +35,30 @@ export default function App() {
       ...cards, 
       {text, text_2, text_3, category}
     ];
-    setCards(updatedCards);
-    setIndex(updatedCards.length - 1);
-    saveCards(updatedCards);
+    setCards(updatedCards); // store in state
+    setIndex(updatedCards.length - 1); // set index to added card
+    saveCards(updatedCards); // store in db
   }
 
   function deleteCardFromData() {
     let updatedCards = [...cards];
-    let cardToDelete = updatedCards.splice(index, 1);
-    console.log(new Date().toISOString(), 'cardToDelete \n', cardToDelete);
-    console.log(new Date().toISOString(), 'deleteCardFromData() \n', updatedCards);
+    //let cardToDelete = updatedCards.splice(index, 1);
+    //console.log(new Date().toISOString(), '\ncardToDelete \n', cardToDelete);
+    //console.log(new Date().toISOString(), '\ndeleteCardFromData() \n', updatedCards);
     setCards(updatedCards);
     setIndex(0);
     saveCards(updatedCards);
   }
   
   function saveCards(updatedCards) {
-    console.log(new Date().toISOString(), 'saveCards() \n', updatedCards);
-    updatedCards = JSON.stringify(updatedCards);
-    AsyncStorage.setItem('CARDS', updatedCards);
+    //console.log(new Date().toISOString(), '\nsaveCards() \n', updatedCards);
+    AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
   }
 
   async function loadCards() {
     let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
     if (quotesFromDb) {
-      //console.log(new Date().toISOString(), 'loadCards() \n', quotesFromDb);
+      //console.log(new Date().toISOString(), '\nloadCards() \n', quotesFromDb);
       setCards(JSON.parse(quotesFromDb));
     }
   }
