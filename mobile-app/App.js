@@ -32,9 +32,7 @@ export default function App() {
   useEffect(() => {
     loadCards();
     initDB();
-  }, []); // load cards from db ONLY on startup
 
-  useEffect(() => {
     if (cards.length <= 0) {
       setShowDeleteButton(false);
       setshowSkipButtons(false);
@@ -48,7 +46,7 @@ export default function App() {
       setshowSkipButtons(true);
       setShowAnswerButton(true);
     }
-  }, [cards]);
+  }, []); // load cards from db ONLY on startup
 
   let prevIndex = index - 1;
   if (prevIndex < 0) {
