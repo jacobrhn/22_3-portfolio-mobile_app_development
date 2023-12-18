@@ -17,8 +17,8 @@ const data = [
 
 export default function App() {
 
-  const [cards, setCards] = useState([]);
   const [index, setIndex] = useState(0);
+  const [cards, setCards] = useState([]);
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showSkipButtons, setshowSkipButtons] = useState(false);
@@ -68,20 +68,18 @@ export default function App() {
   function deleteCardFromData() {
     let updatedCards = [...cards];
     updatedCards.splice(index, 1);
-    setCards(updatedCards);
     setIndex(0);
+    setCards(updatedCards);
     saveCards(updatedCards);
   }
   
   function saveCards(updatedCards) {
-    //console.log(new Date().toISOString(), '\nsaveCards() \n', updatedCards);
     AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
   }
 
   async function loadCards() {
     let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
     if (quotesFromDb) {
-      //console.log(new Date().toISOString(), '\nloadCards() \n', quotesFromDb);
       setCards(JSON.parse(quotesFromDb));
     }
   }
