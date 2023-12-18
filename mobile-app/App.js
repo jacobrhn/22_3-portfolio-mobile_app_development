@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
-import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from './components/Card';
 import NewCard from './components/NewCard';
@@ -15,11 +15,6 @@ const data = [
   {text: "text3.1", text_2: "text3.2",text_3: "text3.3", category: "category3"},
 ];  
 
-const db = SQLite.openDatabase('cards-app.db');
-
-
-
-
 export default function App() {
 
   const [index, setIndex] = useState(0);
@@ -29,10 +24,7 @@ export default function App() {
   const [showSkipButtons, setshowSkipButtons] = useState(false);
   const [showAnswerButton, setShowAnswerButton] = useState(false);
 
-  useEffect(() => {
-    loadCards();
-    initDB();
-  }, []); // load cards from db ONLY on startup
+  useEffect(() => {loadCards()}, []); // load cards from db ONLY on startup
 
   useEffect(() => {
     if (cards.length <= 0) {
@@ -53,14 +45,6 @@ export default function App() {
   let prevIndex = index - 1;
   if (prevIndex < 0) {
     prevIndex = cards.length - 1;
-  }
-
-  function initDB() {
-    db.transaction(
-      (tx) => tx.executeSql(
-        'Create table if not exists cards (id integer primary key not null, text text, text_2 text, text_3 text, category text);'
-        )
-    );
   }
 
   addCardtoData = (text, text_2, text_3, category) => {
@@ -86,19 +70,15 @@ export default function App() {
     updatedCards.splice(index, 1);
     setIndex(0);
     setCards(updatedCards);
-    // saveCards(updatedCards);
-    // TODO Save cards in SQLite
+    saveCards(updatedCards);
   }
   
   function saveCards(updatedCards) {
-    // AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
-    // TODO Save cards in SQLite
-
+    AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
   }
 
   async function loadCards() {
-    // let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
-    // TODO Save cards in SQLite
+    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
     if (quotesFromDb) {
       setCards(JSON.parse(quotesFromDb));
     }
