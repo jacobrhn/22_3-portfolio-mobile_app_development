@@ -20,8 +20,27 @@ export default function App() {
   const [cards, setCards] = useState(data);
   const [index, setIndex] = useState(0);
   const [showInputDialog, setShowInputDialog] = useState(false);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const [showSkipButtons, setshowSkipButtons] = useState(false);
+  const [showAnswerButton, setShowAnswerButton] = useState(false);
 
   useEffect(() => {loadCards()}, []); // load cards from db ONLY on startup
+
+  useEffect(() => {
+    if (cards.length <= 0) {
+      setShowDeleteButton(false);
+      setshowSkipButtons(false);
+      setShowAnswerButton(false);
+    } else if (cards.length === 1) {
+      setShowDeleteButton(true);
+      setshowSkipButtons(false);
+      setShowAnswerButton(true);
+    } else {
+      setShowDeleteButton(true);
+      setshowSkipButtons(true);
+      setShowAnswerButton(true);
+    }
+  }, [cards]);
 
   let prevIndex = index - 1;
   if (prevIndex < 0) {
@@ -61,17 +80,9 @@ export default function App() {
   }
 
   content = <Text> no cards found</Text>;
-  deleteButton = null;
-  previousButton = null;
-  nextButton = null;
-  answerButton = null;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
     content = <Card text={card.text} text_2={card.text_2} />;
-    deleteButton = <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>;
-    previousButton = <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} />;
-    nextButton = <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]} />;
-    answerButton = <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />;
   }
 
   return (
@@ -80,7 +91,7 @@ export default function App() {
       <View style={styles.topNavigationContainer}>
         <Text style={styles.text}>card App</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
-        {deleteButton}
+        {showDeleteButton && <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>}
       </View>
       <View style={styles.cardDisplayContainer}>
         <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
@@ -88,9 +99,9 @@ export default function App() {
       </View>
       
       <View style={styles.cardNavigationContainer}>    
-      {previousButton}
-      {answerButton}
-      {nextButton}
+      {showSkipButtons && <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} />}
+      {showAnswerButton && <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />}
+      {showSkipButtons && <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]} />}
       </View>
     <StatusBar style="auto" />
   </SafeAreaView>
