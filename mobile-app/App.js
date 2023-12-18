@@ -42,9 +42,7 @@ export default function App() {
 
   function deleteCardFromData() {
     let updatedCards = [...cards];
-    //let cardToDelete = updatedCards.splice(index, 1);
-    //console.log(new Date().toISOString(), '\ncardToDelete \n', cardToDelete);
-    //console.log(new Date().toISOString(), '\ndeleteCardFromData() \n', updatedCards);
+    updatedCards.splice(index, 1);
     setCards(updatedCards);
     setIndex(0);
     saveCards(updatedCards);
