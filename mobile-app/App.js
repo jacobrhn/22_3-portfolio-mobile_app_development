@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from './components/Card';
@@ -8,7 +8,7 @@ import NewCard from './components/NewCard';
 import TextButton from './components/TextButton';
 import IconButton from './components/IconButton';
 
-
+// unused data
 const data = [
   {text: "text1.1", text_2: "text1.2", text_3: "text1.3", category: "category1"},
   {text: "Glück ist wie Pupsen, wenn man es erzwingt wirds Scheiße...", text_2: "Napoleon Bonaparte", text_3:"text2.3", category: "category2"},
@@ -17,7 +17,7 @@ const data = [
 
 export default function App() {
 
-  const [cards, setCards] = useState(data);
+  const [cards, setCards] = useState([]);
   const [index, setIndex] = useState(0);
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
@@ -58,6 +58,13 @@ export default function App() {
     saveCards(updatedCards); // store in db
   }
 
+  function deleteCard() {
+    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].text + '"?', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
+    ]);
+  }
+
   function deleteCardFromData() {
     let updatedCards = [...cards];
     updatedCards.splice(index, 1);
@@ -79,7 +86,10 @@ export default function App() {
     }
   }
 
-  content = <Text> no cards found</Text>;
+  content = 
+    <View style={styles.noCards}>
+      <Text style={styles.noCardsText}>Start your Journey by adding your first card</Text>
+    </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
     content = <Card text={card.text} text_2={card.text_2} />;
@@ -91,7 +101,7 @@ export default function App() {
       <View style={styles.topNavigationContainer}>
         <Text style={styles.text}>card App</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
-        {showDeleteButton && <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>}
+        {showDeleteButton && <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/>}
       </View>
       <View style={styles.cardDisplayContainer}>
         <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
@@ -151,5 +161,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     top: 20,
+  },
+  noCards: {
+    margin: 50,
+    color: 'gray',
+
+  },
+  noCardsText: {
+    fontSize: 30,
+    fontWeight: '300',
+    textAlign: 'center',
+    color: 'gray',
   },
 });
