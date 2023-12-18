@@ -23,7 +23,6 @@ export default function App() {
 
   useEffect(() => {loadCards()}, []); // load cards from db ONLY on startup
 
-  const card = cards[index]; 
   let prevIndex = index - 1;
   if (prevIndex < 0) {
     prevIndex = cards.length - 1;
@@ -61,24 +60,37 @@ export default function App() {
     }
   }
 
+  content = <Text> no cards found</Text>;
+  deleteButton = null;
+  previousButton = null;
+  nextButton = null;
+  answerButton = null;
+  if (cards.length > 0) {
+    const card = cards[index]; // This line should be here
+    content = <Card text={card.text} text_2={card.text_2} />;
+    deleteButton = <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>;
+    previousButton = <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} />;
+    nextButton = <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]} />;
+    answerButton = <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
         <Text style={styles.text}>card App</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
-        <IconButton onPress={() => deleteCardFromData()} style={styles.pressableIconDeleteCard} iconName='delete'/>
+        {deleteButton}
       </View>
-
       <View style={styles.cardDisplayContainer}>
         <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
-        <Card text={card.text} text_2={card.text_2} />
+        {content}
       </View>
       
       <View style={styles.cardNavigationContainer}>    
-      <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} />
-      <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} />
-      <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]} />
+      {previousButton}
+      {answerButton}
+      {nextButton}
       </View>
     <StatusBar style="auto" />
   </SafeAreaView>
