@@ -1,7 +1,7 @@
-import { useState, useEffect} from 'react';
+import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -12,7 +12,6 @@ import ManageCardsListItem from '../../../components/ManageCard';
 
 export default function App() {
 
-  const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [editingCard, setEditingCard] = useState(false);
@@ -20,40 +19,25 @@ export default function App() {
   
   useEffect(() => {loadCards()}, []);
 
-  let prevIndex = index - 1;
-  if (prevIndex < 0) {
-    prevIndex = cards.length - 1;
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      setEditingCard(false);  
+      loadCards();
+    }, [])
+  );
+
   addCardtoData = (front_text, back_text, text_3, category) => {
       setShowInputDialog(false);
       let updatedCards = [...cards];
       if (editingCard) {
         const index = cards.indexOf(editingCard);
         updatedCards[index] = { front_text, back_text, text_3, category };
-        setEditingCard(null);
       } else {
         updatedCards.push({ front_text, back_text, text_3, category });
-        setIndex(updatedCards.length - 1); // set index to added card
-        setEditingCard(null);
       }
       setCards(updatedCards); // store in state
       saveCards(updatedCards); // store in db
       console.log('addCardtoData', updatedCards);
-  }
-
-  function deleteCard() {
-    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].front_text + '"?', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
-    ]);
-  }
-
-  function deleteCardFromData() {
-    let updatedCards = [...cards];
-    updatedCards.splice(index, 1);
-    setIndex(0);
-    setCards(updatedCards);
-    saveCards(updatedCards);
   }
   
   function saveCards(updatedCards) {
@@ -94,15 +78,18 @@ export default function App() {
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>manage</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
-        {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View>
       <NewCard 
-          visible={showInputDialog} 
-          onCancel={() => {setShowInputDialog(false), setEditingCard(false)}} 
-          onSave={addCardtoData} 
-          editingCard={editingCard} />
+        visible={showInputDialog} 
+        onCancel={() => setShowInputDialog(false)} 
+        onSave={addCardtoData} 
+        editingCard={editingCard} 
+        cards={cards}
+        setCards={setCards} 
+        saveCards={saveCards} 
+      />
       </View>
       <View style={styles.displayAllCardsContainer}>
         {cards.length > 0 ? (

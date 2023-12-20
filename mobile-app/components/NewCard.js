@@ -3,7 +3,7 @@ import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaVi
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 
-export default function NewCard({visible, onCancel, onSave, editingCard, cards, index, setIndex, setCards, saveCards}) {
+export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards}) {
     const [inputText1, setInputText1] = useState(null);
     const [inputText2, setInputText2] = useState(null);
     const inputText3 = 'text3'; // to be implemented
@@ -18,7 +18,6 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         onCancel();
         setInputText1("");
         setInputText2("");
-        
     }
 
     function saveCard() {
@@ -38,14 +37,15 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
           {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
         ]);
       }
-    
-      function deleteCardFromData() {
+
+    function deleteCardFromData() {
         let updatedCards = [...cards];
-        updatedCards.splice(index, 1);
-        setIndex(0);
+        updatedCards.splice(cards.indexOf(editingCard), 1);
         setCards(updatedCards);
         saveCards(updatedCards);
-      }
+        cancelEditing();
+    }
+    
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={cancelEditing}>
             <SafeAreaView flex={1} width={'100%'}>
