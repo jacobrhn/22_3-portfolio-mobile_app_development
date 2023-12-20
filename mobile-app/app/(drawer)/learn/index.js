@@ -12,7 +12,6 @@ export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
-  const [showInputDialog, setShowInputDialog] = useState(false);
   const navigation = useNavigation();
   
   useEffect(() => {loadCards()}, []);
@@ -22,41 +21,11 @@ export default function App() {
     }, [])
   );
 
-  let prevIndex = index - 1;
-  if (prevIndex < 0) {
+  let prevIndex = index ? index - 1 : 0;
+  if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
   }
 
-  addCardtoData = (front_text, back_text, text_3, category) => {
-    setShowInputDialog(false);
-    const updatedCards = [
-      ...cards, 
-      {front_text, back_text, text_3, category}
-    ];
-    setCards(updatedCards); // store in state
-    setIndex(updatedCards.length - 1); // set index to added card
-    saveCards(updatedCards); // store in db
-    console.log('addCardtoData', updatedCards);
-  }
-
-  function deleteCard() {
-    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].front_text + '"?', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
-    ]);
-  }
-
-  function deleteCardFromData() {
-    let updatedCards = [...cards];
-    updatedCards.splice(index, 1);
-    setIndex(0);
-    setCards(updatedCards);
-    saveCards(updatedCards);
-  }
-  
-  function saveCards(updatedCards) {
-    AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
-  }
 
   async function loadCards() {
     let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
