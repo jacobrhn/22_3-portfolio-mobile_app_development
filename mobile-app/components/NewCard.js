@@ -30,6 +30,14 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Please enter text1 and text2');
             return;
         };
+        if (trimmedText1.length > 256) {
+            alert('Front text cannot exceed 256 characters');
+            return;
+        }
+        if (trimmedText2.length > 64) {
+            alert('Front text cannot exceed 64 characters');
+            return;
+        }
         onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
         setInputText1("");
         setInputText2("");
@@ -65,6 +73,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         returnKeyType='next'
                         onChangeText={setInputText1}
                         value={inputText1}
+                        maxLength={256} // Limit maximum length to 256 characters
                     />
                     <TextInput 
                         style={styles.inputText}

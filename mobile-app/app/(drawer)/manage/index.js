@@ -99,6 +99,7 @@ export default function App() {
         {cards.length > 0 ? (
           <FlatList
             data={cards}
+            style={{ width: '95%'}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
             <ManageCardsListItem card={item} onPress={onCardClick} />
@@ -181,5 +182,6 @@ const styles = StyleSheet.create({
   displayAllCardsContainer: {
     width: '100%',
     height: '80%',
+    alignItems: 'center',
   },
 });
