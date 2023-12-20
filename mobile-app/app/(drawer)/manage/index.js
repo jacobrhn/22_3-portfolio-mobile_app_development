@@ -74,7 +74,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.front_text}>learn</Text>
+        <Text style={styles.front_text}>manage</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
         {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
