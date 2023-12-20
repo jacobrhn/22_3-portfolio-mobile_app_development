@@ -3,10 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Card from './components/Card';
-import NewCard from './components/NewCard';
-import TextButton from './components/TextButton';
-import IconButton from './components/IconButton';
+import Card from '../../../components/Card';
+import NewCard from '../../../components/NewCard';
+import TextButton from '../../../components/TextButton';
+import IconButton from '../../../components/IconButton';
+import addCardtoData from '../../../components/accessCards';
 
 export default function App() {
 
@@ -19,18 +20,6 @@ export default function App() {
   let prevIndex = index - 1;
   if (prevIndex < 0) {
     prevIndex = cards.length - 1;
-  }
-
-  addCardtoData = (front_text, back_text, text_3, category) => {
-    setShowInputDialog(false);
-    const updatedCards = [
-      ...cards, 
-      {front_text, back_text, text_3, category}
-    ];
-    setCards(updatedCards); // store in state
-    setIndex(updatedCards.length - 1); // set index to added card
-    saveCards(updatedCards); // store in db
-    console.log('addCardtoData', updatedCards);
   }
 
   function deleteCard() {
@@ -72,7 +61,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.front_text}>card App</Text>
+        <Text style={styles.front_text}>card App home</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
         {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
       </View>
