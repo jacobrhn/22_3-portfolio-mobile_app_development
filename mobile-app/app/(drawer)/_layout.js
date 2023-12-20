@@ -26,11 +26,12 @@ export default function Layout() {
             <Drawer.Screen 
             name="manage" 
             options={{
-                drawerLabel: 'manage',
-                drawerTitle: 'manage',
+                drawerLabel: 'Manage',
+                drawerTitle: 'Manage',
                 drawerIcon: ({ focused, color, size }) => (
                     <MaterialCommunityIcons name="archive-edit" size={size} color={color} />
                 ),
+            
             }} />
         </Drawer>
     );

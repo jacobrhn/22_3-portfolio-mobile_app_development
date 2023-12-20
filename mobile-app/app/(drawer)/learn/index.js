@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from '../../../components/Card';
-import NewCard from '../../../components/NewCard';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
 
@@ -63,7 +62,7 @@ export default function App() {
 
   content = 
     <View style={styles.noCards}>
-      <Text style={styles.noCardsText}>Start your Journey by adding your first cards in "Verwalte Cards"</Text>
+      <Text style={styles.noCardsText}>Start your Journey by adding your first cards in <Text style={{color: '#4a4a8f', fontWeight: '600'}} onPress={() => navigation.navigate('manage')}>Manage Cards</Text></Text>
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
@@ -75,12 +74,9 @@ export default function App() {
       
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>
-        <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
-        {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View style={styles.cardDisplayContainer}>
-        <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
         {content}
       </View>
       

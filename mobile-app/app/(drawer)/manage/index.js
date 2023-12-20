@@ -63,7 +63,8 @@ export default function App() {
 
   content = 
     <View style={styles.noCards}>
-      <Text style={styles.noCardsText}>Start your Journey by adding your first cards in "Verwalte Cards"</Text>
+      <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
+
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
