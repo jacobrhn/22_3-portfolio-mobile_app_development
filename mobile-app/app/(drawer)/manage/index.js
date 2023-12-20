@@ -14,19 +14,20 @@ export default function App() {
 
   const [cards, setCards] = useState([]);
   const [showInputDialog, setShowInputDialog] = useState(false);
-  const [editingCard, setEditingCard] = useState(false);
+  const [editingCard, setEditingCard] = useState(null);
   const navigation = useNavigation();
   
   useEffect(() => {loadCards()}, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      setEditingCard(false);  
+      setEditingCard(null);  
       loadCards();
     }, [])
   );
 
   addCardtoData = (front_text, back_text, text_3, category) => {
+      setEditingCard(null)
       setShowInputDialog(false);
       let updatedCards = [...cards];
       if (editingCard) {
@@ -34,13 +35,16 @@ export default function App() {
         updatedCards[index] = { front_text, back_text, text_3, category };
       } else {
         updatedCards.push({ front_text, back_text, text_3, category });
+        setEditingCard(null)
       }
+      ;
+      setEditingCard(null)
       setCards(updatedCards); // store in state
       saveCards(updatedCards); // store in db
-      console.log('addCardtoData', updatedCards);
   }
   
   function saveCards(updatedCards) {
+    setEditingCard(null);
     AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
   }
 
@@ -77,15 +81,15 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>manage</Text>
-        <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
+        <IconButton onPress={() => {setEditingCard(null); setShowInputDialog(true)}} style={styles.pressableIconNewCard} />
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View>
       <NewCard 
         visible={showInputDialog} 
-        onCancel={() => setShowInputDialog(false)} 
+        onCancel={() => {setEditingCard(null), setShowInputDialog(false)}} 
         onSave={addCardtoData} 
-        editingCard={editingCard} 
+        editingCard={editingCard}
         cards={cards}
         setCards={setCards} 
         saveCards={saveCards} 

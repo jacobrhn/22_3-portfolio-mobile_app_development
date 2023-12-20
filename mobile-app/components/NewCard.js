@@ -4,14 +4,16 @@ import TextButton from './TextButton';
 import IconButton from './IconButton';
 
 export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards}) {
-    const [inputText1, setInputText1] = useState(null);
-    const [inputText2, setInputText2] = useState(null);
+    const [inputText1, setInputText1] = useState("");
+    const [inputText2, setInputText2] = useState("");
     const inputText3 = 'text3'; // to be implemented
     const inputCategory = 'category1'; // to be implemented
 
     useEffect(() => {
-        setInputText1(editingCard?.front_text || '');
-        setInputText2(editingCard?.back_text || '');
+        if (editingCard) {
+            setInputText1(editingCard.front_text);
+            setInputText2(editingCard.back_text);
+        }
     }, [editingCard]);
 
     function cancelEditing() {
@@ -29,6 +31,8 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             return;
         };
         onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
+        setInputText1("");
+        setInputText2("");
     }
 
     function deleteCard() {
