@@ -4,11 +4,12 @@ import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import Card from '../../../components/Card';
 import NewCard from '../../../components/NewCard';
-import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
+import ManageCardsListItem from '../../../components/ManageCard';
 
 export default function App() {
 
@@ -66,9 +67,9 @@ export default function App() {
     }
   }
 
-  function editCard(index) {
-    setEditingCard(cards[index]);
+  function onCardClick(card) {
     setShowInputDialog(true);
+    setEditingCard(card);
   }
 
   content = 
@@ -86,7 +87,6 @@ export default function App() {
         onPressDelete={() => deleteCard(i)}
       />
     ));
-    console.log('content', content);
   }
 
   return (
@@ -106,13 +106,7 @@ export default function App() {
             data={cards}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
-              <Card
-                key={index}
-                front_text={item.front_text}
-                back_text={item.back_text}
-                onPressEdit={() => editCard(index)}
-                onPressDelete={() => deleteCard(index)}
-              />
+            <ManageCardsListItem card={item} onPress={onCardClick} />
             )}
           />
         ) : (

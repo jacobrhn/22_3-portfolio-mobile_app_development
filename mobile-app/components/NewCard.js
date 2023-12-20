@@ -10,8 +10,6 @@ import TextButton from './TextButton';
 import IconButton from './IconButton';
 
 export default function NewCard({visible, onCancel, onSave, editingCard}) {
-    const [front_text, setFrontText] = useState(editingCard ? editingCard.front_text : '');
-    const [back_text, setBackText] = useState(editingCard ? editingCard.back_text : '');
     const [inputText1, setInputText1] = useState(null);
     const [inputText2, setInputText2] = useState(null);
     const inputText3 = 'text3'; // to be implemented
@@ -58,6 +56,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard}) {
                         multiline={true}
                         returnKeyType='next'
                         onChangeText={setInputText1}
+                        value={inputText1}
                     />
                     <TextInput 
                         style={styles.inputText}
@@ -65,6 +64,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard}) {
                         returnKeyType= 'done'
                         onChangeText={setInputText2}
                         onSubmitEditing={() => {saveCard()}}
+                        value={inputText2}
                     />
                     {/**
                      *  // TODO: add text3 and category 
