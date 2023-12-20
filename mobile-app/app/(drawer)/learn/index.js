@@ -1,6 +1,6 @@
 import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,7 +25,6 @@ export default function App() {
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
   }
-
 
   async function loadCards() {
     let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
