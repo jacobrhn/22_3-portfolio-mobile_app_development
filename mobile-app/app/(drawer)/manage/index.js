@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
-import { TouchableOpacity } from 'react-native';
 
 import Card from '../../../components/Card';
 import NewCard from '../../../components/NewCard';
@@ -35,6 +34,7 @@ export default function App() {
       } else {
         updatedCards.push({ front_text, back_text, text_3, category });
         setIndex(updatedCards.length - 1); // set index to added card
+        setEditingCard(null);
       }
       setCards(updatedCards); // store in state
       saveCards(updatedCards); // store in db
@@ -67,7 +67,7 @@ export default function App() {
     }
   }
 
-  function onCardClick(card) {
+  function onCardClick(card) { 
     setShowInputDialog(true);
     setEditingCard(card);
   }
@@ -98,7 +98,11 @@ export default function App() {
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View>
-      <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} editingCard={editingCard} />
+      <NewCard 
+          visible={showInputDialog} 
+          onCancel={() => {setShowInputDialog(false), setEditingCard(false)}} 
+          onSave={addCardtoData} 
+          editingCard={editingCard} />
       </View>
       <View style={styles.displayAllCardsContainer}>
         {cards.length > 0 ? (

@@ -1,35 +1,24 @@
 import { useState, useEffect} from 'react';
-import{ Modal,
-        StyleSheet,
-        TextInput,
-        Platform,
-        KeyboardAvoidingView,
-        SafeAreaView
-    } from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert } from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 
-export default function NewCard({visible, onCancel, onSave, editingCard}) {
+export default function NewCard({visible, onCancel, onSave, editingCard, cards, index, setIndex, setCards, saveCards}) {
     const [inputText1, setInputText1] = useState(null);
     const [inputText2, setInputText2] = useState(null);
     const inputText3 = 'text3'; // to be implemented
     const inputCategory = 'category1'; // to be implemented
 
     useEffect(() => {
-        if (editingCard) {
-            setInputText1(editingCard.front_text);
-            setInputText2(editingCard.back_text);
-          // ...
-        } else {
-            setInputText1('');
-            setInputText2('');
-        }
-      }, [editingCard]);
+        setInputText1(editingCard?.front_text || '');
+        setInputText2(editingCard?.back_text || '');
+    }, [editingCard]);
 
     function cancelEditing() {
         onCancel();
         setInputText1("");
         setInputText2("");
+        
     }
 
     function saveCard() {
@@ -42,6 +31,21 @@ export default function NewCard({visible, onCancel, onSave, editingCard}) {
         };
         onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
     }
+
+    function deleteCard() {
+        Alert.alert('Delete Card','Do you realy want to delete "'+ editingCard.front_text + '"?', [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
+        ]);
+      }
+    
+      function deleteCardFromData() {
+        let updatedCards = [...cards];
+        updatedCards.splice(index, 1);
+        setIndex(0);
+        setCards(updatedCards);
+        saveCards(updatedCards);
+      }
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={cancelEditing}>
             <SafeAreaView flex={1} width={'100%'}>
@@ -69,7 +73,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard}) {
                     {/**
                      *  // TODO: add text3 and category 
                      */}
-                    <TextButton text='Cancel' onPress={() => {cancelEditing()}} pale={true}/>
+                    {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
                     <TextButton 
                         text='Save' 
                         onPress={() => {saveCard()}}
