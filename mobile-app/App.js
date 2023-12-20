@@ -21,19 +21,20 @@ export default function App() {
     prevIndex = cards.length - 1;
   }
 
-  addCardtoData = (text, text_2, text_3, category) => {
+  addCardtoData = (front_text, back_text, text_3, category) => {
     setShowInputDialog(false);
     const updatedCards = [
       ...cards, 
-      {text, text_2, text_3, category}
+      {front_text, back_text, text_3, category}
     ];
     setCards(updatedCards); // store in state
     setIndex(updatedCards.length - 1); // set index to added card
     saveCards(updatedCards); // store in db
+    console.log('addCardtoData', updatedCards);
   }
 
   function deleteCard() {
-    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].text + '"?', [
+    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].front_text + '"?', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
     ]);
@@ -64,14 +65,14 @@ export default function App() {
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
-    content = <Card text={card.text} text_2={card.text_2} />;
+    content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.text}>card App</Text>
+        <Text style={styles.front_text}>card App</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
         {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
       </View>

@@ -41,7 +41,7 @@ export default function NewCard({visible, onCancel, onSave}) {
                     <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
                     <TextInput 
                         style={[styles.inputText, styles.inputText1]} 
-                        placeholder='text1'
+                        placeholder='front_text'
                         multiline={true}
                         returnKeyType='next'
                         onChangeText={setInputText1}
