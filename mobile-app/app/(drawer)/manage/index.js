@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native-gesture-handler';
 
 import Card from '../../../components/Card';
 import NewCard from '../../../components/NewCard';
@@ -14,6 +15,7 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [showInputDialog, setShowInputDialog] = useState(false);
+  const [editingCard, setEditingCard] = useState(false);
   const navigation = useNavigation();
   
   useEffect(() => {loadCards()}, []);
@@ -22,17 +24,20 @@ export default function App() {
   if (prevIndex < 0) {
     prevIndex = cards.length - 1;
   }
-
   addCardtoData = (front_text, back_text, text_3, category) => {
-    setShowInputDialog(false);
-    const updatedCards = [
-      ...cards, 
-      {front_text, back_text, text_3, category}
-    ];
-    setCards(updatedCards); // store in state
-    setIndex(updatedCards.length - 1); // set index to added card
-    saveCards(updatedCards); // store in db
-    console.log('addCardtoData', updatedCards);
+      setShowInputDialog(false);
+      let updatedCards = [...cards];
+      if (editingCard) {
+        const index = cards.indexOf(editingCard);
+        updatedCards[index] = { front_text, back_text, text_3, category };
+        setEditingCard(null);
+      } else {
+        updatedCards.push({ front_text, back_text, text_3, category });
+        setIndex(updatedCards.length - 1); // set index to added card
+      }
+      setCards(updatedCards); // store in state
+      saveCards(updatedCards); // store in db
+      console.log('addCardtoData', updatedCards);
   }
 
   function deleteCard() {
@@ -61,39 +66,68 @@ export default function App() {
     }
   }
 
+  function editCard(index) {
+    setEditingCard(cards[index]);
+    setShowInputDialog(true);
+  }
+
   content = 
     <View style={styles.noCards}>
       <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
 
     </View>;
   if (cards.length > 0) {
-    const card = cards[index]; // This line should be here
-    content = <Card front_text={card.front_text} back_text={card.back_text} />;
+    content = cards.map((card, i) => (
+      <Card 
+        key={i} 
+        front_text={card.front_text} 
+        back_text={card.back_text} 
+        onPressEdit={() => editCard(i)}
+        onPressDelete={() => deleteCard(i)}
+      />
+    ));
+    console.log('content', content);
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>manage</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
         {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
-      <View style={styles.cardDisplayContainer}>
-        <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
-        {content}
+      <View>
+      <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} editingCard={editingCard} />
       </View>
-      
-      <View style={styles.cardNavigationContainer}>    
-      {cards.length > 1 ? <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} /> : null}
-      {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} /> : null}
-      {cards.length > 1 ? <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]}/> : null}
+      <View style={styles.displayAllCardsContainer}>
+        {cards.length > 0 ? (
+          <FlatList
+            data={cards}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <Card
+                key={index}
+                front_text={item.front_text}
+                back_text={item.back_text}
+                onPressEdit={() => editCard(index)}
+                onPressDelete={() => deleteCard(index)}
+              />
+            )}
+          />
+        ) : (
+          <View style={styles.noCards}>
+            <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
+          </View>
+        )}
       </View>
-    <StatusBar style="auto" />
-  </SafeAreaView>
-);
-}
+      <View style={styles.cardNavigationContainer}>
+        {/* ... */}
+      </View>
+      <StatusBar style="auto" />
+    </SafeAreaView>
+  );
+  }
 
 const styles = StyleSheet.create({
   container: {
@@ -154,5 +188,9 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     textAlign: 'center',
     color: 'gray',
+  },
+  displayAllCardsContainer: {
+    width: '100%',
+    height: '80%',
   },
 });

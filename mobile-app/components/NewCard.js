@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect} from 'react';
 import{ Modal,
         StyleSheet,
         TextInput,
@@ -9,11 +9,24 @@ import{ Modal,
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 
-export default function NewCard({visible, onCancel, onSave}) {
+export default function NewCard({visible, onCancel, onSave, editingCard}) {
+    const [front_text, setFrontText] = useState(editingCard ? editingCard.front_text : '');
+    const [back_text, setBackText] = useState(editingCard ? editingCard.back_text : '');
     const [inputText1, setInputText1] = useState(null);
     const [inputText2, setInputText2] = useState(null);
     const inputText3 = 'text3'; // to be implemented
     const inputCategory = 'category1'; // to be implemented
+
+    useEffect(() => {
+        if (editingCard) {
+            setInputText1(editingCard.front_text);
+            setInputText2(editingCard.back_text);
+          // ...
+        } else {
+            setInputText1('');
+            setInputText2('');
+        }
+      }, [editingCard]);
 
     function cancelEditing() {
         onCancel();
