@@ -3,22 +3,23 @@ import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaVi
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 
-export default function NewCard({visible, onCancel, onSave, editingCard, cards, index, setIndex, setCards, saveCards}) {
-    const [inputText1, setInputText1] = useState(null);
-    const [inputText2, setInputText2] = useState(null);
+export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards}) {
+    const [inputText1, setInputText1] = useState("");
+    const [inputText2, setInputText2] = useState("");
     const inputText3 = 'text3'; // to be implemented
     const inputCategory = 'category1'; // to be implemented
 
     useEffect(() => {
-        setInputText1(editingCard?.front_text || '');
-        setInputText2(editingCard?.back_text || '');
+        if (editingCard) {
+            setInputText1(editingCard.front_text);
+            setInputText2(editingCard.back_text);
+        }
     }, [editingCard]);
 
     function cancelEditing() {
         onCancel();
         setInputText1("");
         setInputText2("");
-        
     }
 
     function saveCard() {
@@ -29,7 +30,17 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Please enter text1 and text2');
             return;
         };
+        if (trimmedText1.length > 256) {
+            alert('Front text cannot exceed 256 characters');
+            return;
+        }
+        if (trimmedText2.length > 64) {
+            alert('Front text cannot exceed 64 characters');
+            return;
+        }
         onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
+        setInputText1("");
+        setInputText2("");
     }
 
     function deleteCard() {
@@ -38,14 +49,15 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
           {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
         ]);
       }
-    
-      function deleteCardFromData() {
+
+    function deleteCardFromData() {
         let updatedCards = [...cards];
-        updatedCards.splice(index, 1);
-        setIndex(0);
+        updatedCards.splice(cards.indexOf(editingCard), 1);
         setCards(updatedCards);
         saveCards(updatedCards);
-      }
+        cancelEditing();
+    }
+    
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={cancelEditing}>
             <SafeAreaView flex={1} width={'100%'}>
@@ -61,6 +73,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         returnKeyType='next'
                         onChangeText={setInputText1}
                         value={inputText1}
+                        maxLength={256} // Limit maximum length to 256 characters
                     />
                     <TextInput 
                         style={styles.inputText}

@@ -12,7 +12,6 @@ export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
-  const [showInputDialog, setShowInputDialog] = useState(false);
   const navigation = useNavigation();
   
   useEffect(() => {loadCards()}, []);
@@ -22,40 +21,20 @@ export default function App() {
     }, [])
   );
 
-  let prevIndex = index - 1;
-  if (prevIndex < 0) {
+  let prevIndex = index ? index - 1 : 0;
+  if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
   }
 
-  addCardtoData = (front_text, back_text, text_3, category) => {
-    setShowInputDialog(false);
-    const updatedCards = [
-      ...cards, 
-      {front_text, back_text, text_3, category}
-    ];
-    setCards(updatedCards); // store in state
-    setIndex(updatedCards.length - 1); // set index to added card
-    saveCards(updatedCards); // store in db
-    console.log('addCardtoData', updatedCards);
-  }
 
-  function deleteCard() {
-    Alert.alert('Delete Card','Do you realy want to delete "'+ cards[index].front_text + '"?', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
-    ]);
-  }
-
-  function deleteCardFromData() {
-    let updatedCards = [...cards];
-    updatedCards.splice(index, 1);
-    setIndex(0);
-    setCards(updatedCards);
-    saveCards(updatedCards);
-  }
-  
-  function saveCards(updatedCards) {
-    AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
+  function answerDialog() {
+    Alert.alert(
+      'Guessed Correct?',
+      message='correct solution: \n' + cards[index].back_text,
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed') }
+      ],
+      { cancelable: false });
   }
 
   async function loadCards() {
@@ -87,7 +66,7 @@ export default function App() {
       
       <View style={styles.cardNavigationContainer}>    
       {cards.length > 1 ? <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} /> : null}
-      {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} /> : null}
+      {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => answerDialog()} /> : null}
       {cards.length > 1 ? <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]}/> : null}
       </View>
     <StatusBar style="auto" />

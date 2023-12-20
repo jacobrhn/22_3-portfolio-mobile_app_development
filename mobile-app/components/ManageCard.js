@@ -2,12 +2,12 @@ import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 
 export default function ManageCardListItem({card, onPress }) {
   return (
-    <View style={{borderWidth: '1px', borderColor: 'black', marginBottom:5}}>
+    <View style={styles.listItem}>
       <TouchableOpacity
         onPress={() => onPress(card)}
       >
-        <Text>{card.front_text}</Text>
-        <Text>{card.back_text}</Text>
+        <Text style={styles.front_text}>{card.front_text.length > 80 ? card.front_text.substring(0, 80) + ' ...' : card.front_text}</Text>
+        <Text style={styles.back_text}>{card.back_text.length > 18 ? card.back_text.substring(0, 18) + ' ...' : card.back_text}</Text>
       </TouchableOpacity>
         
       </View>
@@ -15,25 +15,22 @@ export default function ManageCardListItem({card, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listItem: {
+    padding: 10,
     backgroundColor: 'white',
-    borderWidth: 1,
     borderColor: 'black',
+    borderWidth: 1,
+    marginVertical: 5,
     borderRadius: 10,
-    margin: 20,
-    paddingHorizontal: 10,
-    justifyContent: 'center',
-    width: '90%',
-    height: '50%'
+    overflow: 'hidden',
   },
   front_text: {
-    fontSize: 38,
-    fontStyle: 'italic',
-    marginBottom: 10,
+    fontSize: 18,
     textAlign: 'center',
   },
   back_text: {
-    fontSize: 24,
-    textAlign: "right"
+    fontStyle: 'italic',
+    color: 'gray',
+    textAlign: 'center',
   }
 });
