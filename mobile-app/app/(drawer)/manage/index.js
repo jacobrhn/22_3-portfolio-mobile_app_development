@@ -1,18 +1,20 @@
 import { useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Card from './components/Card';
-import NewCard from './components/NewCard';
-import TextButton from './components/TextButton';
-import IconButton from './components/IconButton';
+import Card from '../../../components/Card';
+import NewCard from '../../../components/NewCard';
+import TextButton from '../../../components/TextButton';
+import IconButton from '../../../components/IconButton';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [showInputDialog, setShowInputDialog] = useState(false);
+  const navigation = useNavigation();
   
   useEffect(() => {loadCards()}, []);
 
@@ -61,7 +63,8 @@ export default function App() {
 
   content = 
     <View style={styles.noCards}>
-      <Text style={styles.noCardsText}>Start your Journey by adding your first card</Text>
+      <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
+
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
@@ -72,9 +75,10 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.front_text}>card App</Text>
+        <Text style={styles.front_text}>manage</Text>
         <IconButton onPress={() => setShowInputDialog(true)} style={styles.pressableIconNewCard} />
         {cards.length > 0 ? <IconButton onPress={() => deleteCard()} style={styles.pressableIconDeleteCard} iconName='delete'/> : null}
+        <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View style={styles.cardDisplayContainer}>
         <NewCard visible={showInputDialog} onCancel={() => setShowInputDialog(false)} onSave={addCardtoData} />
@@ -120,6 +124,16 @@ const styles = StyleSheet.create({
     right: 10,
     top: 20,
   },
+  pressableIconDeleteCard: { 
+    position: 'absolute',
+    right: 10,
+    top: 50,
+  },
+  pressableIconOpenDrawer: { 
+    position: 'absolute',
+    left: 10,
+    top: 20,
+  },
   pressableIconPreviousCard: {
     position: 'absolute',
     left:13,
@@ -128,11 +142,6 @@ const styles = StyleSheet.create({
   pressableIconNextCard: {
     position: 'absolute',
     right: 10,
-    top: 20,
-  },
-  pressableIconDeleteCard: { 
-    position: 'absolute',
-    left: 10,
     top: 20,
   },
   noCards: {
