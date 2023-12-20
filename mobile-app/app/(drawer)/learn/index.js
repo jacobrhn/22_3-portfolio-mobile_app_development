@@ -1,6 +1,6 @@
 import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,6 +24,17 @@ export default function App() {
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
+  }
+
+
+  function answerDialog() {
+    Alert.alert(
+      'Guessed Correct?',
+      message='correct solution: \n' + cards[index].back_text,
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed') }
+      ],
+      { cancelable: false });
   }
 
   async function loadCards() {
@@ -55,7 +66,7 @@ export default function App() {
       
       <View style={styles.cardNavigationContainer}>    
       {cards.length > 1 ? <IconButton iconName={'skip-previous'} onPress={() => setIndex(prevIndex)} style={[styles.pressableIconPreviousCard]} /> : null}
-      {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => alert('Enter Answer')} /> : null}
+      {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => answerDialog()} /> : null}
       {cards.length > 1 ? <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]}/> : null}
       </View>
     <StatusBar style="auto" />
