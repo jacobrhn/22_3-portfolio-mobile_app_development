@@ -50,17 +50,8 @@ export default function App() {
   }
 
   async function loadCards() {
-
-        // TODO adjust for Firebase
-    database.transaction((tx) =>
-      tx.executeSql(
-        'SELECT * FROM cards ;',
-        [],
-        (_, result) => {
-          setCards(result.rows._array);
-        },
-      )
-    );
+    const cards = await Firebase.getCards();
+    setCards(cards);
   }
 
   function onCardClick(card) { 

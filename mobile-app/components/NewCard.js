@@ -2,6 +2,7 @@ import { useState, useEffect} from 'react';
 import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert } from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
+import Firebase from './Firebase';
 
 export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards, database}) {
     const [inputText1, setInputText1] = useState("");
@@ -55,13 +56,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         let updatedCards = [...cards];
         updatedCards.splice(cards.indexOf(editingCard), 1);
         setCards(updatedCards);
-        // TODO adjust for Firebase
-        database.transaction((tx) =>
-        tx.executeSql(
-            'DELETE FROM cards WHERE id = ?;',
-            [editingCard.id]
-        )
-        );
+        Firebase.deleteCard(editingCard.id);
         cancelEditing();
     }
     

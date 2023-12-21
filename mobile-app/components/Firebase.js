@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
@@ -29,6 +29,22 @@ export default class Firebase{
     static init(){
         const app = initializeApp(firebaseConfig);
         this.db = getFirestore(app);
+    }
+
+    static async getCards(){
+        let cards = [];
+        const queryStapshot = await getDocs(collection(this.db, "cards"));
+        queryStapshot.forEach((doc) => {
+            cards.push({
+                id: doc.id,
+                front_text: doc.data().front_text,
+                back_text: doc.data().back_text,
+                text_3: doc.data().text_3,
+                category: doc.data().category,
+                archived: doc.data().archived,
+            });
+        });
+        return cards;
     }
 
     static async saveCard(front_text, back_text, text_3, category, archived){
