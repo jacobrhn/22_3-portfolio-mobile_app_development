@@ -1,10 +1,11 @@
 import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
 // import {...} from "firebase/database";
-import { getFirestore } from "firebase/firestore";
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+// import { getFirestore } from "firebase/firestore";
+// import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 // import {...} from "firebase/functions";
 // import {...} from "firebase/storage";
 
@@ -28,5 +29,16 @@ export default class Firebase{
     static init(){
         const app = initializeApp(firebaseConfig);
         this.db = getFirestore(app);
+    }
+
+    static async saveCard(front_text, back_text, text_3, category, archived){
+        const docRef = await addDoc(collection(this.db, "cards"), {
+            front_text,
+            back_text,
+            text_3,
+            category,
+            archived,
+        })
+        return docRef.id;
     }
 }

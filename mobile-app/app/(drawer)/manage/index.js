@@ -1,16 +1,14 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import * as SQLite from 'expo-sqlite';
 
 import Card from '../../../components/Card';
 import NewCard from '../../../components/NewCard';
 import IconButton from '../../../components/IconButton';
 import ManageCardsListItem from '../../../components/ManageCard';
-
-const database = SQLite.openDatabase('learning-cards-app.db');
+import Firebase from '../../../components/Firebase';
 
 export default function App() {
 
@@ -23,18 +21,10 @@ export default function App() {
   useFocusEffect(
     React.useCallback(() => {
       setEditingCard(null);
-      initDB();  
+      Firebase.init();
       loadCards();
     }, [])
   );
-
-  function initDB() {
-    database.transaction(tx => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS cards (id INTEGER PRIMARY KEY NOT NULL, front_text TEXT NOT NULL, back_text TEXT NOT NULL, text_3 TEXT, category TEXT, archived BINARY);'
-      );
-    });
-  } 
 
   addCardtoData = (front_text, back_text, text_3, category, archived) => {
       setEditingCard(null)
@@ -53,21 +43,15 @@ export default function App() {
       saveCards(front_text, back_text, text_3, category, archived, updatedCards); // store in db
   }
 
-  function saveCards(front_text, back_text, text_3, category, archived, updatedCards) {
+  async function saveCards(front_text, back_text, text_3, category, archived, updatedCards) {
     setEditingCard(null);
-
-    database.transaction((tx) =>
-    tx.executeSql(
-      'INSERT INTO cards (front_text, back_text, text_3, category, archived) values(?,?,?,?,?);',
-      [front_text, back_text, text_3, category, archived],
-      (_, result) => {
-        updatedCards[updatedCards.length - 1].id = result.insertId;
-      },
-    )
-  );
+    const id = await Firebase.saveCard(front_text, back_text, text_3, category, archived, updatedCards);
+    updatedCards[updatedCards.length - 1].id = id;
   }
 
   async function loadCards() {
+
+        // TODO adjust for Firebase
     database.transaction((tx) =>
       tx.executeSql(
         'SELECT * FROM cards ;',
@@ -117,7 +101,8 @@ export default function App() {
         cards={cards}
         setCards={setCards} 
         saveCards={saveCards} 
-        database={database}
+        // TODO adjust for Firebase
+        // database={database}
       />
       </View>
       <View style={styles.displayAllCardsContainer}>
