@@ -5,8 +5,8 @@ import { useNavigation, useFocusEffect} from '@react-navigation/native';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
-import IconButton from '../../../components/IconButton';
-import loadCards from '../../../components/accessCards.js';
+import IconButton from '../../../components/IconButton'; 
+import loadRandomCards from '../../../components/loadRandomCards.js';
 
 export default function App() {
 
@@ -14,10 +14,10 @@ export default function App() {
   const [cards, setCards] = useState([]);
   const navigation = useNavigation();
   
-  useEffect(() => {loadCards( setCards )}, []);
+  useEffect(() => {loadRandomCards( setCards )}, []);
   useFocusEffect(
     React.useCallback(() => {
-      loadCards( setCards );
+      loadRandomCards( setCards );
     }, [])
   );
 
@@ -26,7 +26,7 @@ export default function App() {
     prevIndex = cards.length - 1;
   }
 
-  
+
   function answerDialog() {
     Alert.alert(
       'Guessed Correct?',
@@ -36,6 +36,8 @@ export default function App() {
       ],
       { cancelable: false });
   }
+
+
 
   content = 
     <View style={styles.noCards}>
