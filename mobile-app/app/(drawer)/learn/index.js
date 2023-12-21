@@ -3,7 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 
-
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
@@ -13,8 +12,6 @@ export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
-  const [warning, setWarning] = useState("");
-  
   const navigation = useNavigation();
   
   useEffect(() => {loadCards( setCards )}, []);
@@ -29,7 +26,7 @@ export default function App() {
     prevIndex = cards.length - 1;
   }
 
-
+  
   function answerDialog() {
     Alert.alert(
       'Guessed Correct?',
