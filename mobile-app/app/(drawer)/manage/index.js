@@ -30,11 +30,12 @@ export default function App() {
       let updatedCards = [...cards];
       if (editingCard) {
         const index = cards.indexOf(editingCard);
-        updatedCards[index] = { front_text, back_text, text_3, category, archived };
-        Firebase.updateCard(editingCard.id, front_text, back_text, text_3, category, archived);
+        const id = editingCard.id;
+        updatedCards[index] = {id, front_text, back_text, text_3, category, archived };
+        Firebase.updateCard(id, front_text, back_text, text_3, category, archived);
       } else {
         updatedCards.push({ front_text, back_text, text_3, category, archived});
-        saveCards(front_text, back_text, text_3, category, archived, updatedCards); // store in db
+        saveCards(front_text, back_text, text_3, category, archived, updatedCards);
       };
       setEditingCard(null)
       setShowInputDialog(false);
