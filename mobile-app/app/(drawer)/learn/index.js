@@ -2,12 +2,12 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
+import * as SQLite from 'expo-sqlite';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton'; 
 import loadRandomCards from '../../../components/loadRandomCards.js';
-
 
 export default function App() {
 
@@ -59,8 +59,6 @@ export default function App() {
       ],
       { cancelable: false });
   }
-
-
 
   content = 
     <View style={styles.noCards}>
