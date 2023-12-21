@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc , doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc , doc , setDoc} from 'firebase/firestore';
 
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
@@ -60,4 +60,15 @@ export default class Firebase{
     static async deleteCard(id){
         await deleteDoc(doc(this.db, "cards", id));
     }
+
+    static async updateCard(id, front_text, back_text, text_3, category, archived){
+        await setDoc(doc(this.db, "cards", id), {
+            front_text,
+            back_text,
+            text_3,
+            category,
+            archived,
+        });
+    }
+
 }

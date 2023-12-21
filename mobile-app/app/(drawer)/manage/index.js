@@ -27,20 +27,18 @@ export default function App() {
   );
 
   addCardtoData = (front_text, back_text, text_3, category, archived) => {
-      setEditingCard(null)
-      setShowInputDialog(false);
       let updatedCards = [...cards];
       if (editingCard) {
         const index = cards.indexOf(editingCard);
         updatedCards[index] = { front_text, back_text, text_3, category, archived };
+        Firebase.updateCard(editingCard.id, front_text, back_text, text_3, category, archived);
       } else {
         updatedCards.push({ front_text, back_text, text_3, category, archived});
-        setEditingCard(null)
-      }
-      ;
+        saveCards(front_text, back_text, text_3, category, archived, updatedCards); // store in db
+      };
       setEditingCard(null)
-      setCards(updatedCards); // store in state
-      saveCards(front_text, back_text, text_3, category, archived, updatedCards); // store in db
+      setShowInputDialog(false);
+      setCards(updatedCards);
   }
 
   async function saveCards(front_text, back_text, text_3, category, archived, updatedCards) {
