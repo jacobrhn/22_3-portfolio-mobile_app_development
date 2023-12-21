@@ -10,6 +10,8 @@ import NewCard from '../../../components/NewCard';
 import IconButton from '../../../components/IconButton';
 import ManageCardsListItem from '../../../components/ManageCard';
 
+const database = SQLite.openDatabase('learning-cards-app.db');
+
 export default function App() {
 
   const [cards, setCards] = useState([]);
@@ -17,14 +19,22 @@ export default function App() {
   const [editingCard, setEditingCard] = useState(null);
   const navigation = useNavigation();
   
-  useEffect(() => {loadCards()}, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      setEditingCard(null);  
+      setEditingCard(null);
+      initDB();  
       loadCards();
     }, [])
   );
+
+  function initDB() {
+    database.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS cards (id INTEGER PRIMARY KEY NOT NULL, front_text TEXT NOT NULL, back_text TEXT NOT NULL, text_3 TEXT, category TEXT, archived BINARY NOT NULL);'
+      );
+    });
+  } 
 
   addCardtoData = (front_text, back_text, text_3, category) => {
       setEditingCard(null)
