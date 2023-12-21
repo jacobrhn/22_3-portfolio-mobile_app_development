@@ -8,17 +8,18 @@ import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton'; 
 import loadRandomCards from '../../../components/loadRandomCards.js';
 
+
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
-  const navigation = useNavigation();
   const [numCards, setNumCards] = useState(4);
-  
-  useEffect(() => {promptForNumberOfCards()}, []);
+  const navigation = useNavigation();
+
   useFocusEffect(
     React.useCallback(() => {
-      loadRandomCards( setCards );
+      setCards([]);
+      promptForNumberOfCards();
     }, [])
   );
 
@@ -63,7 +64,7 @@ export default function App() {
 
   content = 
     <View style={styles.noCards}>
-      <Text style={styles.noCardsText}>Start your Journey by adding your first cards in <Text style={{color: '#4a4a8f', fontWeight: '600'}} onPress={() => navigation.navigate('manage')}>Manage Cards</Text></Text>
+      <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => promptForNumberOfCards()}>Start a Session</Text>
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here

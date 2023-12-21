@@ -10,6 +10,5 @@ export default async function loadRandomCards( setCards, numberOfCards = 4 ) {
         randomCards.push(cards[randomIndex]);
       }
       setCards(randomCards);
-      console.log(randomCards);
     }
   }
