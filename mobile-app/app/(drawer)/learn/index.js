@@ -2,30 +2,53 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
-import IconButton from '../../../components/IconButton';
+import IconButton from '../../../components/IconButton'; 
+import loadRandomCards from '../../../components/loadRandomCards.js';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
+  const [numCards, setNumCards] = useState(4);
   const navigation = useNavigation();
-  
-  useEffect(() => {loadCards()}, []);
+
   useFocusEffect(
     React.useCallback(() => {
-      loadCards();
+      setCards([]);
+      promptForNumberOfCards();
     }, [])
   );
+
+  const promptForNumberOfCards = () => {
+    
+    Alert.prompt(
+      'Anzahl der Karten',
+      'Geben Sie die Anzahl der Karten ein, die geladen werden sollen:',
+      [
+        {
+          text: 'Abbrechen',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: (value) => {
+            setNumCards(parseInt(value, 10));
+            loadRandomCards(setCards, parseInt(value, 10));
+          },
+        },
+      ],
+      'plain-text',
+      String(numCards)
+    );
+  };
 
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
   }
-
 
   function answerDialog() {
     Alert.alert(
@@ -37,16 +60,9 @@ export default function App() {
       { cancelable: false });
   }
 
-  async function loadCards() {
-    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
-    if (quotesFromDb) {
-      setCards(JSON.parse(quotesFromDb));
-    }
-  }
-
   content = 
     <View style={styles.noCards}>
-      <Text style={styles.noCardsText}>Start your Journey by adding your first cards in <Text style={{color: '#4a4a8f', fontWeight: '600'}} onPress={() => navigation.navigate('manage')}>Manage Cards</Text></Text>
+      <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => promptForNumberOfCards()}>Start a Session</Text>
     </View>;
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
