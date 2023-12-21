@@ -4,7 +4,7 @@ import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
 
-export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards, database}) {
+export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards }) {
     const [inputText1, setInputText1] = useState("");
     const [inputText2, setInputText2] = useState("");
     const [inputText3, setInputText3] = useState("");
