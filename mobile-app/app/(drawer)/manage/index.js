@@ -2,8 +2,8 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
+import * as SQLite from 'expo-sqlite';
 
 import Card from '../../../components/Card';
 import NewCard from '../../../components/NewCard';
@@ -40,16 +40,20 @@ export default function App() {
       ;
       setEditingCard(null)
       setCards(updatedCards); // store in state
-      saveCards(updatedCards); // store in db
+      // TODO prepare for db
+      // saveCards(updatedCards); // store in db
   }
   
   function saveCards(updatedCards) {
     setEditingCard(null);
-    AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
+    // TODO prepare for db
+    // AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
   }
 
   async function loadCards() {
-    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
+    // TODO prepare for db
+    // let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
+    let quotesFromDb = null;
     if (quotesFromDb) {
       setCards(JSON.parse(quotesFromDb));
     }

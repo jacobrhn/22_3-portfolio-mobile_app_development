@@ -54,7 +54,8 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         let updatedCards = [...cards];
         updatedCards.splice(cards.indexOf(editingCard), 1);
         setCards(updatedCards);
-        saveCards(updatedCards);
+        // TODO prepare for db
+        // saveCards(updatedCards);
         cancelEditing();
     }
     

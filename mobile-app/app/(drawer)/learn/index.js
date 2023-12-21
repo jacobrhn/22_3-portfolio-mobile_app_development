@@ -2,7 +2,6 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import * as SQLite from 'expo-sqlite';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
@@ -24,6 +23,7 @@ export default function App() {
   );
 
   const promptForNumberOfCards = () => {
+    
     Alert.prompt(
       'Anzahl der Karten',
       'Geben Sie die Anzahl der Karten ein, die geladen werden sollen:',
