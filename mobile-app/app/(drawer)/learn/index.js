@@ -2,22 +2,25 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
+import loadCards from '../../../components/accessCards.js';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
+  const [warning, setWarning] = useState("");
+  
   const navigation = useNavigation();
   
-  useEffect(() => {loadCards()}, []);
+  useEffect(() => {loadCards( setCards )}, []);
   useFocusEffect(
     React.useCallback(() => {
-      loadCards();
+      loadCards( setCards );
     }, [])
   );
 
@@ -35,13 +38,6 @@ export default function App() {
         { text: 'OK', onPress: () => console.log('OK Pressed') }
       ],
       { cancelable: false });
-  }
-
-  async function loadCards() {
-    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
-    if (quotesFromDb) {
-      setCards(JSON.parse(quotesFromDb));
-    }
   }
 
   content = 
