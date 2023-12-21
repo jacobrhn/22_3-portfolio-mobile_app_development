@@ -13,19 +13,41 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const navigation = useNavigation();
+  const [numCards, setNumCards] = useState(4);
   
-  useEffect(() => {loadRandomCards( setCards )}, []);
+  useEffect(() => {promptForNumberOfCards()}, []);
   useFocusEffect(
     React.useCallback(() => {
       loadRandomCards( setCards );
     }, [])
   );
 
+  const promptForNumberOfCards = () => {
+    Alert.prompt(
+      'Anzahl der Karten',
+      'Geben Sie die Anzahl der Karten ein, die geladen werden sollen:',
+      [
+        {
+          text: 'Abbrechen',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: (value) => {
+            setNumCards(parseInt(value, 10));
+            loadRandomCards(setCards, parseInt(value, 10));
+          },
+        },
+      ],
+      'plain-text',
+      String(numCards)
+    );
+  };
+
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
   }
-
 
   function answerDialog() {
     Alert.alert(
