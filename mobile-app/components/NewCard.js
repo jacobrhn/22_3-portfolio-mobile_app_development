@@ -2,12 +2,14 @@ import { useState, useEffect} from 'react';
 import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert } from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
+import * as SQLite from 'expo-sqlite';
 
-export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards}) {
+export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards, saveCards, database}) {
     const [inputText1, setInputText1] = useState("");
     const [inputText2, setInputText2] = useState("");
-    const inputText3 = 'text3'; // to be implemented
-    const inputCategory = 'category1'; // to be implemented
+    const [inputText3, setInputText3] = useState("");
+    const [inputCategory, setInputCategory] = useState(""); // to be implemented
+    const [inputArchived, setInputArchived] = useState(false); // to be implemented
 
     useEffect(() => {
         if (editingCard) {
@@ -38,13 +40,13 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Front text cannot exceed 64 characters');
             return;
         }
-        onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory);
+        onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory, inputArchived);
         setInputText1("");
         setInputText2("");
     }
 
     function deleteCard() {
-        Alert.alert('Delete Card','Do you realy want to delete "'+ editingCard.front_text + '"?', [
+        Alert.alert('Delete Card','Do you realy want to delete "'+ editingCard.id + '"?', [
           {text: 'Cancel', style: 'cancel'},
           {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
         ]);
@@ -54,8 +56,12 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         let updatedCards = [...cards];
         updatedCards.splice(cards.indexOf(editingCard), 1);
         setCards(updatedCards);
-        // TODO prepare for db
-        // saveCards(updatedCards);
+        database.transaction((tx) =>
+        tx.executeSql(
+            'DELETE FROM cards WHERE id = ?;',
+            [editingCard.id]
+        )
+        );
         cancelEditing();
     }
     

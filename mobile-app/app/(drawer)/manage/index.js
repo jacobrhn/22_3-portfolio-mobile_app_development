@@ -31,47 +31,57 @@ export default function App() {
   function initDB() {
     database.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS cards (id INTEGER PRIMARY KEY NOT NULL, front_text TEXT NOT NULL, back_text TEXT NOT NULL, text_3 TEXT, category TEXT, archived BINARY NOT NULL);'
+        'CREATE TABLE IF NOT EXISTS cards (id INTEGER PRIMARY KEY NOT NULL, front_text TEXT NOT NULL, back_text TEXT NOT NULL, text_3 TEXT, category TEXT, archived BINARY);'
       );
     });
   } 
 
-  addCardtoData = (front_text, back_text, text_3, category) => {
+  addCardtoData = (front_text, back_text, text_3, category, archived) => {
       setEditingCard(null)
       setShowInputDialog(false);
       let updatedCards = [...cards];
       if (editingCard) {
         const index = cards.indexOf(editingCard);
-        updatedCards[index] = { front_text, back_text, text_3, category };
+        updatedCards[index] = { front_text, back_text, text_3, category, archived };
       } else {
-        updatedCards.push({ front_text, back_text, text_3, category });
+        updatedCards.push({ front_text, back_text, text_3, category, archived});
         setEditingCard(null)
       }
       ;
       setEditingCard(null)
       setCards(updatedCards); // store in state
-      // TODO prepare for db
-      // saveCards(updatedCards); // store in db
+      saveCards(front_text, back_text, text_3, category, archived, updatedCards); // store in db
   }
-  
-  function saveCards(updatedCards) {
+
+  function saveCards(front_text, back_text, text_3, category, archived, updatedCards) {
     setEditingCard(null);
-    // TODO prepare for db
-    // AsyncStorage.setItem('CARDS', JSON.stringify(updatedCards));
+
+    database.transaction((tx) =>
+    tx.executeSql(
+      'INSERT INTO cards (front_text, back_text, text_3, category, archived) values(?,?,?,?,?);',
+      [front_text, back_text, text_3, category, archived],
+      (_, result) => {
+        updatedCards[updatedCards.length - 1].id = result.insertId;
+      },
+    )
+  );
   }
 
   async function loadCards() {
-    // TODO prepare for db
-    // let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
-    let quotesFromDb = null;
-    if (quotesFromDb) {
-      setCards(JSON.parse(quotesFromDb));
-    }
+    database.transaction((tx) =>
+      tx.executeSql(
+        'SELECT * FROM cards ;',
+        [],
+        (_, result) => {
+          setCards(result.rows._array);
+        },
+      )
+    );
   }
 
   function onCardClick(card) { 
-    setShowInputDialog(true);
     setEditingCard(card);
+    setShowInputDialog(true);
   }
 
   content = 
@@ -107,6 +117,7 @@ export default function App() {
         cards={cards}
         setCards={setCards} 
         saveCards={saveCards} 
+        database={database}
       />
       </View>
       <View style={styles.displayAllCardsContainer}>
