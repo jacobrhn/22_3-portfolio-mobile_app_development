@@ -2,11 +2,11 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
+import Firebase from '../../../components/Firebase';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
-import IconButton from '../../../components/IconButton'; 
-import loadRandomCards from '../../../components/loadRandomCards.js';
+import IconButton from '../../../components/IconButton';
 
 export default function App() {
 
@@ -21,6 +21,11 @@ export default function App() {
       promptForNumberOfCards();
     }, [])
   );
+
+  let prevIndex = index ? index - 1 : 0;
+  if (prevIndex <= 0) {
+    prevIndex = cards.length - 1;
+  }
 
   const promptForNumberOfCards = () => {
     
@@ -45,9 +50,25 @@ export default function App() {
     );
   };
 
-  let prevIndex = index ? index - 1 : 0;
-  if (prevIndex <= 0) {
-    prevIndex = cards.length - 1;
+  async function loadRandomCards(setCards, numberOfCards) {
+    const cardsFromDb = await Firebase.getCards();
+  
+    if (cardsFromDb.length > 0) {
+      let randomCards = [];
+      for (let i = 0; i < numberOfCards; i++) {
+        let randomIndex = Math.floor(Math.random() * cardsFromDb.length);
+        randomCards.push(cardsFromDb[randomIndex]);
+        cardsFromDb.splice(randomIndex, 1);
+      }
+      setCards(randomCards);
+    } else {
+      Alert.alert(
+        "No cards found",
+        "Please add some cards to your database",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    }
   }
 
   function answerDialog() {
