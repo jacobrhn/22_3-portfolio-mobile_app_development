@@ -1,14 +1,24 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Firebase from "./Firebase"
+import {Alert } from 'react-native';
 
-export default async function loadRandomCards( setCards, numberOfCards = 4 ) {
-    let quotesFromDb = await AsyncStorage.getItem('CARDS'); 
-    if (quotesFromDb) {
-      let cards = JSON.parse(quotesFromDb);
-      let randomCards = [];
-      for (let i = 0; i < numberOfCards; i++) {
-        let randomIndex = Math.floor(Math.random() * cards.length);
-        randomCards.push(cards[randomIndex]);
-      }
-      setCards(randomCards);
+export default async function loadRandomCards(setCards, numberOfCards) {
+  const cardsFromDb = await Firebase.getCards();
+
+  if (cardsFromDb.length > 0) {
+    let randomCards = [];
+    for (let i = 0; i < numberOfCards; i++) {
+      let randomIndex = Math.floor(Math.random() * cardsFromDb.length);
+      randomCards.push(cardsFromDb[randomIndex]);
+      cardsFromDb.splice(randomIndex, 1); // Remove selected card from the cards array
     }
+    setCards(randomCards);
+  } else {
+    Alert.alert(
+      "No cards found",
+      "Please add some cards to your database",
+      [{ text: "OK" }],
+      { cancelable: false }
+    );
   }
+}
+
