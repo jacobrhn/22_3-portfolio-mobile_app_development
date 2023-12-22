@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView } from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -119,6 +119,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
                     <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
+                    <Text style={styles.inputLabel}>Front-Side Text:</Text>
                     <TextInput 
                         style={[styles.inputText, styles.inputText1]} 
                         placeholder='front_text'
@@ -128,6 +129,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         value={inputText1}
                         maxLength={256} // Limit maximum length to 256 characters
                     />
+                    <Text style={styles.inputLabel}>Back-Side Text:</Text>
                     <TextInput 
                         style={styles.inputText}
                         placeholder='text2'
@@ -136,10 +138,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         onSubmitEditing={() => {saveCard()}}
                         value={inputText2}
                     />
-                    {/**
-                     *  // TODO: add text3 and category 
-                     */}
-
+                    <Text style={styles.inputLabel}>Categories:</Text>
                     <View style={styles.categoriesContainer}>
                         <ScrollView style={styles.categoriesScrollable} horizontal={true}>
                             <TextButton 
@@ -197,7 +196,6 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
     },
     inputText1: {
-        marginTop: 50,
         height: 150,
     },
     inputText2: {
@@ -212,7 +210,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         width: '80%',
-        marginBottom: 10,
 
     },
     categoryNew: {
@@ -237,5 +234,14 @@ const styles = StyleSheet.create({
     categoriesScrollable: {
         height: 100,
     },
-
+    inputLabel: {
+        marginTop: 10,
+        fontSize: 16,
+        fontStyle: 'italic',
+        color: '#333',
+        marginBottom: 2,
+        fontWeight: '400',
+        alignSelf: 'flex-start',
+        marginLeft: '10%',
+    },
 })
