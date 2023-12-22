@@ -9,9 +9,8 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [inputText2, setInputText2] = useState("");
     const [inputText3, setInputText3] = useState("");
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [availableCategories, setAvailableCategories] = useState(["Todo"]);
+    const [availableCategories, setAvailableCategories] = useState([]);
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
-    const [newCategory, setNewCategory] = useState(false);
 
     
     useEffect(() => {
@@ -69,7 +68,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         setInputText2("");
         setInputText3("");
         setSelectedCategories([]);
-        setAvailableCategories(["Todo"]);
+        setAvailableCategories([]);
     }
 
     function saveCard() {
@@ -93,7 +92,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         setInputText2("");
         setInputText3("");
         setSelectedCategories([]);
-        setAvailableCategories(["Todo"]);
+        setAvailableCategories([]);
     }
 
     function deleteCard() {
