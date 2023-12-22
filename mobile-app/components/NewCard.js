@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View } from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView } from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -8,9 +8,12 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [inputText1, setInputText1] = useState("");
     const [inputText2, setInputText2] = useState("");
     const [inputText3, setInputText3] = useState("");
-    const [selectedCategories, setSelectedCategories] = useState(""); // to be implemented
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [availableCategories, setAvailableCategories] = useState(["Todo"]);
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
+    const [newCategory, setNewCategory] = useState(false);
 
+    
     useEffect(() => {
         if (editingCard) {
             setInputText1(editingCard.front_text);
@@ -20,20 +23,53 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         }
     }, [editingCard]);
 
-    const categories = ['Critical', 'Normal', 'Minor'];
-
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
             setSelectedCategories(selectedCategories.filter(c => c !== category));
+            if (!availableCategories.includes(category)) {
+                setAvailableCategories([...availableCategories, category]);
+            }
         } else {
             setSelectedCategories([...selectedCategories, category]);
+            setAvailableCategories(availableCategories.filter(c => c !== category));
         }
+    }
+    
+    function addCategory(category) {
+        if (category && !selectedCategories.includes(category) && !availableCategories.includes(category)) {
+            setSelectedCategories([...selectedCategories, category]);
+        }
+    }
+
+    function inputNewCategory() {
+
+        Alert.prompt(
+            'New Category',
+            'Enter new category name',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: (category) => addCategory(category),
+                },
+            ],
+            'plain-text',
+            '',
+            'default'
+        );
+        
     }
 
     function cancelEditing() {
         onCancel();
         setInputText1("");
         setInputText2("");
+        setInputText3("");
+        setSelectedCategories([]);
+        setAvailableCategories(["Todo"]);
     }
 
     function saveCard() {
@@ -55,6 +91,9 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         onSave(trimmedText1, trimmedText2, trimmedText3, selectedCategories, inputArchived);
         setInputText1("");
         setInputText2("");
+        setInputText3("");
+        setSelectedCategories([]);
+        setAvailableCategories(["Todo"]);
     }
 
     function deleteCard() {
@@ -102,15 +141,33 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                      */}
 
                     <View style={styles.categoriesContainer}>
-                    {categories.map((category, index) => (
-                        <TextButton 
-                            key={index} 
-                            text={category} 
-                            onPress={() => toggleCategory(category)} 
-                            pale={selectedCategories.includes(category) ? false : true}
-                            style={selectedCategories.includes(category) ? styles.categorySelected : styles.categoryUnselected}
+                        <ScrollView style={styles.categoriesScrollable} horizontal={true}>
+                            <TextButton 
+                            text="New ..." 
+                            onPress={() => inputNewCategory()} 
+                            pale={true}
+                            style={styles.categoryNew}
                         />
-                    ))}
+                        {selectedCategories.map((category, index) => (
+                            <TextButton 
+                                key={index} 
+                                text={category} 
+                                onPress={() => toggleCategory(category)} 
+                                pale={false}
+                                style={styles.categorySelected}
+                            />
+                        ))}
+                        {availableCategories.map((category, index) => (
+                            <TextButton 
+                                key={index} 
+                                text={category} 
+                                onPress={() => toggleCategory(category)} 
+                                pale={true}
+                                style={styles.categoryUnselected}
+                            />
+                        ))}
+                        </ScrollView>
+
                     </View>
                     {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
                     <TextButton 
@@ -153,23 +210,32 @@ const styles = StyleSheet.create({
     },
     categoriesContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         width: '80%',
         marginBottom: 10,
+
+    },
+    categoryNew: {
+        borderWidth:0,
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
     },
     categoryUnselected: {
-        color: '#4a4a8f',
-        borderRadius: 5,
         padding: 5,
         margin: 2,
-        width: '30%',
+        width: 'auto',
+        height: 40,
     },
     categorySelected: {
-        backgroundColor: '#4a4a8f',
-        color: '',
-        borderRadius: 5,
         padding: 5,
         margin: 2,
-        width: '30%',
+        width: 'auto',
+        height: 40,
     },
+    categoriesScrollable: {
+        height: 100,
+    },
+
 })
