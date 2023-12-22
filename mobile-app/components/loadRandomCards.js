@@ -9,7 +9,7 @@ export default async function loadRandomCards(setCards, numberOfCards) {
     for (let i = 0; i < numberOfCards; i++) {
       let randomIndex = Math.floor(Math.random() * cardsFromDb.length);
       randomCards.push(cardsFromDb[randomIndex]);
-      cardsFromDb.splice(randomIndex, 1); // Remove selected card from the cards array
+      cardsFromDb.splice(randomIndex, 1);
     }
     setCards(randomCards);
   } else {

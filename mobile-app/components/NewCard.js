@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert } from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View } from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -8,15 +8,27 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [inputText1, setInputText1] = useState("");
     const [inputText2, setInputText2] = useState("");
     const [inputText3, setInputText3] = useState("");
-    const [inputCategory, setInputCategory] = useState(""); // to be implemented
+    const [selectedCategories, setSelectedCategories] = useState(""); // to be implemented
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
 
     useEffect(() => {
         if (editingCard) {
             setInputText1(editingCard.front_text);
             setInputText2(editingCard.back_text);
+            setInputText3(editingCard.text_3);
+            setSelectedCategories(editingCard.category);
         }
     }, [editingCard]);
+
+    const categories = ['Critical', 'Normal', 'Minor'];
+
+    function toggleCategory(category) {
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(selectedCategories.filter(c => c !== category));
+        } else {
+            setSelectedCategories([...selectedCategories, category]);
+        }
+    }
 
     function cancelEditing() {
         onCancel();
@@ -40,7 +52,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Front text cannot exceed 64 characters');
             return;
         }
-        onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory, inputArchived);
+        onSave(trimmedText1, trimmedText2, trimmedText3, selectedCategories, inputArchived);
         setInputText1("");
         setInputText2("");
     }
@@ -88,6 +100,18 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     {/**
                      *  // TODO: add text3 and category 
                      */}
+
+                    <View style={styles.categoriesContainer}>
+                    {categories.map((category, index) => (
+                        <TextButton 
+                            key={index} 
+                            text={category} 
+                            onPress={() => toggleCategory(category)} 
+                            pale={selectedCategories.includes(category) ? false : true}
+                            style={selectedCategories.includes(category) ? styles.categorySelected : styles.categoryUnselected}
+                        />
+                    ))}
+                    </View>
                     {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
                     <TextButton 
                         text='Save' 
@@ -114,17 +138,38 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding: 10,
         textAlignVertical: 'top',
-      },
-      inputText1: {
+    },
+    inputText1: {
         marginTop: 50,
         height: 150,
-      },
-      inputText2: {
-      },
-      pressableIconBack: {
+    },
+    inputText2: {
+    },
+    pressableIconBack: {
         position: 'absolute',
         top: 10,
         left: 10,
         zIndex: 1,
-      },
+    },
+    categoriesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+        marginBottom: 10,
+    },
+    categoryUnselected: {
+        color: '#4a4a8f',
+        borderRadius: 5,
+        padding: 5,
+        margin: 2,
+        width: '30%',
+    },
+    categorySelected: {
+        backgroundColor: '#4a4a8f',
+        color: '',
+        borderRadius: 5,
+        padding: 5,
+        margin: 2,
+        width: '30%',
+    },
 })
