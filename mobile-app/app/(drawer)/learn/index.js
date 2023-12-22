@@ -7,18 +7,21 @@ import Firebase from '../../../components/Firebase';
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
+import NewSession from '../../../components/NewSession';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [numCards, setNumCards] = useState(4);
+  const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
   const navigation = useNavigation();
+
 
   useFocusEffect(
     React.useCallback(() => {
       setCards([]);
-      promptForNumberOfCards();
+      setSessionPromptVisible(true);
     }, [])
   );
 
@@ -92,6 +95,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <NewSession 
+        visible={sessionPromptVisible} 
+        onCancel={() => setSessionPromptVisible(false)} 
+        onStart={setCards} />
       
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>

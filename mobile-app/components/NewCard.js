@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text} from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text, ActivityIndicator} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -11,6 +11,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
+    const [loading, setLoading] = useState(false);
 
     
     useEffect(() => {
@@ -87,7 +88,9 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Front text cannot exceed 64 characters');
             return;
         }
+        setLoading(true);
         onSave(trimmedText1, trimmedText2, trimmedText3, selectedCategories, inputArchived);
+        setLoading(false);
         setInputText1("");
         setInputText2("");
         setInputText3("");
@@ -117,6 +120,11 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     style={styles.inputContainer}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#4a4a8f" />
+                        ) : (
+                            <>
+
                     <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
                     <Text style={styles.inputLabel}>Front-Side Text:</Text>
                     <TextInput 
@@ -171,7 +179,11 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     <TextButton 
                         text='Save' 
                         onPress={() => {saveCard()}}
-                    />
+                    /> 
+                    
+                            </>
+                        )}
+
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </Modal>
