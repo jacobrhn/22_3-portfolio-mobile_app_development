@@ -14,25 +14,15 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
-
   const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);// TODO
   const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);// TODO
   const navigation = useNavigation();
 
-  {/**
-    useEffect(() => {
-    setCards([]);
-    setSessionPromptVisible(true);
+  useEffect(() => {
+    setCardsAnsweredCorrect([]);
+    setCardsAnsweredIncorrect([]);
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setCards([]);
-      setSessionPromptVisible(true);
-    }, [])
-  );
-
-*/}
 
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
