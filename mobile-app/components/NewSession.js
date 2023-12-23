@@ -17,8 +17,8 @@ import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
 
-export default function NewSession({visible, onCancel, onStart}) {
-    const [inputText1, setInputText1] = useState("");
+export default function NewSession({visible, setVisibility, onCancel, onStart}) {
+    const [numberOfCards, setNumberOfCards] = useState("");
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [avialableCards, setAvailableCards] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
@@ -27,8 +27,13 @@ export default function NewSession({visible, onCancel, onStart}) {
 
     
     useEffect(() => {
+        setLoading(true);
         Firebase.getCards().then(cards => {
+            console.log("setLoading", loading);
             setAvailableCards(cards);
+            setLoading(false);
+            console.log("setLoading", loading);
+            setNumberOfCards(cards.length.toString());
             let categories = [];
             cards.forEach(card => {
                 if (!categories.includes(card.category)) {
@@ -36,7 +41,6 @@ export default function NewSession({visible, onCancel, onStart}) {
                 }
             });
             setAvailableCategories(categories);
-            setLoading(false);
         }
         );
     }, []);
@@ -55,12 +59,50 @@ export default function NewSession({visible, onCancel, onStart}) {
 
     function cancelSessionPrompt() {
         onCancel();
-        setInputText1("");
+        setNumberOfCards("");
         setSelectedCategories([]);
         setAvailableCategories([]);
         setAvailableCards([]);
         setLoading(true);
     }
+
+    function onStartPress() {
+        if (numberOfCards === "" && selectedCategories.length === 0) {
+            Alert.alert(
+                "Error",
+                "Please enter a number of cards or at least one category you want to learn",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => console.log("OK Pressed"),
+                    },
+                ],
+                { cancelable: false }
+            );
+            return;
+        }
+        
+        const randomizedCards = randomCards(); // Call the randomCards function
+        onStart(randomizedCards); // Pass the randomizedCards to the onStart function
+        setVisibility(false);
+        setNumberOfCards("");
+        setSelectedCategories([]);
+        setAvailableCategories([]);
+        setAvailableCards([]);
+    }
+
+    function randomCards() {     
+        let filteredCards = avialableCards.filter(card => selectedCategories.includes(card.category)); 
+        setAvailableCards(filteredCards);
+        let randomCards = [];
+        for (let i = 0; i < numberOfCards; i++) {
+        let randomIndex = Math.floor(Math.random() * avialableCards.length);
+        randomCards.push(avialableCards[randomIndex]);
+        avialableCards.splice(randomIndex, 1);
+        }
+        return randomCards;
+
+      }
     
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={cancelSessionPrompt}>
@@ -78,13 +120,12 @@ export default function NewSession({visible, onCancel, onStart}) {
                                 <Text style={styles.inputLabel}>No cards available</Text>
                             ) : (
                                 <>
-                                <Text style={styles.inputLabel}>number of cards available: {avialableCards.length}</Text>
                                 <Text style={styles.inputLabel}>number of cards:</Text>
                                 <TextInput 
                                 style={styles.inputText}
                                 keyboardType='numeric'
-                                onChangeText={setInputText1}
-                                value={inputText1}
+                                onChangeText={setNumberOfCards}
+                                value={numberOfCards}
                                 maxLength={3}
                                 />
                                 <Text style={styles.inputLabel}>Categories:</Text>
@@ -112,7 +153,7 @@ export default function NewSession({visible, onCancel, onStart}) {
                                 </View>
                                 <TextButton 
                                     text="Start" 
-                                    onPress={() => onStart(avialableCards)} 
+                                    onPress={() => {onStartPress()}} 
                                     pale={false}
                                 />
                                 </>
@@ -141,7 +182,7 @@ const styles = StyleSheet.create({
         padding: 10,
         textAlignVertical: 'top',
     },
-    inputText1: {
+    numberOfCards: {
         height: 150,
     },
     inputText2: {

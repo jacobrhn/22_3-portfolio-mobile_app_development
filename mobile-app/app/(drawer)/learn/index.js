@@ -97,8 +97,10 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <NewSession 
         visible={sessionPromptVisible} 
+        setVisibility={setSessionPromptVisible}
         onCancel={() => setSessionPromptVisible(false)} 
         onStart={setCards} />
+
       
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>

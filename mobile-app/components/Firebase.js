@@ -44,6 +44,7 @@ export default class Firebase{
                 archived: doc.data().archived,
             });
         });
+        console.log("cardsloaded ", cards)
         return cards;
     }
 
@@ -70,5 +71,4 @@ export default class Firebase{
             archived,
         });
     }
-
 }
