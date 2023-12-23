@@ -10,8 +10,9 @@
    * it should be implemented in a 
    */
 
-import { useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
@@ -23,27 +24,26 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     const [avialableCards, setAvailableCards] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    
 
-    
-    useEffect(() => {
-        setLoading(true);
-        Firebase.getCards().then(cards => {
-            console.log("setLoading", loading);
-            setAvailableCards(cards);
-            setLoading(false);
-            console.log("setLoading", loading);
-            setNumberOfCards(cards.length.toString());
-            let categories = [];
-            cards.forEach(card => {
-                if (!categories.includes(card.category)) {
-                    categories.push(card.category);
-                }
-            });
-            setAvailableCategories(categories);
-        }
-        );
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            setLoading(true);
+            Firebase.getCards().then(cards => {
+                setAvailableCards(cards);
+                setNumberOfCards(cards.length.toString());
+                let categories = [];
+                cards.forEach(card => {
+                    if (!categories.includes(card.category)) {
+                        categories.push(card.category);
+                    }
+                });
+                setAvailableCategories(categories);
+                console.log("useFocusEffect(), available categories", availableCategories, "\n------------------")
+                setLoading(false);
+            }
+            );
+        }, [])
+    );
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
