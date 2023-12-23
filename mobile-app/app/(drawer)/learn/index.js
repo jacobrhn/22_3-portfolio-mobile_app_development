@@ -7,6 +7,7 @@ import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
 import NewSession from '../../../components/NewSession';
+import InputLabel from '../../../components/InputLabel';
 
 export default function App() {
 

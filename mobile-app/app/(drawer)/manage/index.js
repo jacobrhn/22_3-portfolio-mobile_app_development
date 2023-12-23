@@ -9,6 +9,7 @@ import NewCard from '../../../components/NewCard';
 import IconButton from '../../../components/IconButton';
 import ManageCardsListItem from '../../../components/ManageCard';
 import Firebase from '../../../components/Firebase';
+import InputLabel from '../../../components/InputLabel';
 
 export default function App() {
 
@@ -121,7 +122,7 @@ export default function App() {
           <>
           <View style={styles.filterExpandable}>
             <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
-              <Text style={{fontStyle: 'italic'}}>Beta: Filter</Text>
+              <InputLabel label='Expand Filter' styles={{marginLeft: "2%"}}/>
             </TouchableOpacity>
             {showFilter && (
               <>
@@ -232,10 +233,11 @@ const styles = StyleSheet.create({
   },
   filterExpandable:{
     width: '95%',
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
   filterContainer: {
-    borderRadius: 10,
-    borderWidth: 1,
+    width: '100%',
 },
 flatList: {
     marginBottom: 10,
