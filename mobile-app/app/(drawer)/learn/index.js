@@ -14,9 +14,13 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
+
+  const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);// TODO
+  const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);// TODO
   const navigation = useNavigation();
 
-  useEffect(() => {
+  {/**
+    useEffect(() => {
     setCards([]);
     setSessionPromptVisible(true);
   }, []);
@@ -28,6 +32,8 @@ export default function App() {
     }, [])
   );
 
+*/}
+
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
@@ -38,19 +44,62 @@ export default function App() {
       'Guessed Correct?',
       message='correct solution: \n' + cards[index].back_text,
       [
-        { text: 'OK', onPress: () => console.log('OK Pressed') }
+        { text: 'correct', onPress: () => correctAnswer() },
+        { text: 'incorrect', onPress: () => incorrectAnswer() },
       ],
       { cancelable: false });
   }
 
-  content = 
+  function correctAnswer() {
+    console.log('correct answer');
+    const newCards = cards.filter((card, i) => i !== index);
+    const answeredCard = cards[index];
+    setCards(newCards);
+    setCardsAnsweredCorrect(prevCards => [...prevCards, answeredCard]);
+  
+    if (newCards.length > 0) {
+      setIndex(prevIndex => (prevIndex + 1) % newCards.length);
+    } else {
+      setIndex(0);
+      setSessionPromptVisible(true);
+    }
+  }
+  
+  function incorrectAnswer() {
+    console.log('incorrect answer');
+    const newCards = cards.filter((card, i) => i !== index);
+    const answeredCard = cards[index];
+    setCards(newCards);
+    setCardsAnsweredIncorrect(prevCards => [...prevCards, answeredCard]);
+  
+    if (newCards.length > 0) {
+      setIndex(prevIndex => (prevIndex + 1) % newCards.length);
+    } else {
+      setIndex(0);
+      setSessionPromptVisible(true);
+    }
+  }
+
+
+
+  let content = 
     <View style={styles.noCards}>
-      <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => setSessionPromptVisible(true)}>Start a Session</Text>
+    <Text >Latest Score: </Text>
+    <Text >cards answered correct: {cardsAnsweredCorrect.length}</Text>
+    <Text >cards answered incorrect: {cardsAnsweredIncorrect.length}</Text>
+    <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => setSessionPromptVisible(true)}>Start a Session</Text>
     </View>;
+
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
     content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
+  console.log("-------------------");
+  console.log('cards: ', cards.length, );
+  console.log('cardsAnsweredCorrect: ', cardsAnsweredCorrect.length, );
+  console.log('cardsAnsweredIncorrect: ', cardsAnsweredIncorrect.length, );
+  console.log('index: ', index);
+  console.log('prevIndex: ', prevIndex);
 
   return (
     <SafeAreaView style={styles.container}>
