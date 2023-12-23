@@ -13,10 +13,17 @@ export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
-  const [numCards, setNumCards] = useState(4);
   const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
+
+  const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);// TODO
+  const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);// TODO
   const navigation = useNavigation();
 
+  {/**
+    useEffect(() => {
+    setCards([]);
+    setSessionPromptVisible(true);
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -25,53 +32,11 @@ export default function App() {
     }, [])
   );
 
+*/}
+
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
     prevIndex = cards.length - 1;
-  }
-
-  const promptForNumberOfCards = () => {
-    
-    Alert.prompt(
-      'Anzahl der Karten',
-      'Geben Sie die Anzahl der Karten ein, die geladen werden sollen:',
-      [
-        {
-          text: 'Abbrechen',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: (value) => {
-            setNumCards(parseInt(value, 10));
-            loadRandomCards(setCards, parseInt(value, 10));
-          },
-        },
-      ],
-      'plain-text',
-      String(numCards)
-    );
-  };
-
-  async function loadRandomCards(setCards, numberOfCards) {
-    const cardsFromDb = await Firebase.getCards();
-  
-    if (cardsFromDb.length > 0) {
-      let randomCards = [];
-      for (let i = 0; i < numberOfCards; i++) {
-        let randomIndex = Math.floor(Math.random() * cardsFromDb.length);
-        randomCards.push(cardsFromDb[randomIndex]);
-        cardsFromDb.splice(randomIndex, 1);
-      }
-      setCards(randomCards);
-    } else {
-      Alert.alert(
-        "No cards found",
-        "Please add some cards to your database",
-        [{ text: "OK" }],
-        { cancelable: false }
-      );
-    }
   }
 
   function answerDialog() {
@@ -79,19 +44,50 @@ export default function App() {
       'Guessed Correct?',
       message='correct solution: \n' + cards[index].back_text,
       [
-        { text: 'OK', onPress: () => console.log('OK Pressed') }
+        { text: 'correct', onPress: () => correctAnswer() },
+        { text: 'incorrect', onPress: () => incorrectAnswer() },
       ],
       { cancelable: false });
   }
 
-  content = 
+  function correctAnswer() {
+    console.log('correct answer');
+    const newCards = cards.filter((card, i) => i !== index);
+    const answeredCard = cards[index];
+    setCards(newCards);
+    setCardsAnsweredCorrect(prevCards => [...prevCards, answeredCard]);
+    setIndex(0);
+    }
+  
+  function incorrectAnswer() {
+    console.log('incorrect answer');
+    const newCards = cards.filter((card, i) => i !== index);
+    const answeredCard = cards[index];
+    setCards(newCards);
+    setCardsAnsweredIncorrect(prevCards => [...prevCards, answeredCard]);
+    setIndex(0);
+  }
+
+
+
+  let content = 
     <View style={styles.noCards}>
-      <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => promptForNumberOfCards()}>Start a Session</Text>
+    <Text >Latest Score: </Text>
+    <Text >cards answered correct: {cardsAnsweredCorrect.length}</Text>
+    <Text >cards answered incorrect: {cardsAnsweredIncorrect.length}</Text>
+    <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => setSessionPromptVisible(true)}>Start a Session</Text>
     </View>;
+
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
     content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
+  console.log("-------------------");
+  console.log('cards: ', cards.length, );
+  console.log('cardsAnsweredCorrect: ', cardsAnsweredCorrect.length, );
+  console.log('cardsAnsweredIncorrect: ', cardsAnsweredIncorrect.length, );
+  console.log('index: ', index);
+  console.log('prevIndex: ', prevIndex);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,9 +95,8 @@ export default function App() {
         visible={sessionPromptVisible} 
         setVisibility={setSessionPromptVisible}
         onCancel={() => setSessionPromptVisible(false)} 
-        onStart={setCards} />
-
-      
+        onStart={setCards} 
+      />
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />

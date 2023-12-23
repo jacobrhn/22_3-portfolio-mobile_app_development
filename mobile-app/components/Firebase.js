@@ -44,7 +44,7 @@ export default class Firebase{
                 archived: doc.data().archived,
             });
         });
-        console.log("Firebase.getCards(): \n", cards, "\n------------------")
+        // console.log("Firebase.getCards(): \n", cards, "\n------------------")
         return cards;
     }
 
