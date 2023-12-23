@@ -38,26 +38,6 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         }, [])
     );
 
-    function uniqueCategories(cards) {
-        let categories = [];
-        cards.forEach(card => {
-            categories.push(...card.category);
-        });
-        return [...new Set(categories)];
-    }
-
-    function toggleCategory(category) {
-        if (selectedCategories.includes(category)) {
-            setSelectedCategories(selectedCategories.filter(c => c !== category));
-            if (!availableCategories.includes(category)) {
-                setAvailableCategories([...availableCategories, category]);
-            }
-        } else {
-            setSelectedCategories([...selectedCategories, category]);
-            setAvailableCategories(availableCategories.filter(c => c !== category));
-        }
-    }
-
     function cancelSessionPrompt() {
         onCancel();
         setNumberOfCards("");
@@ -83,13 +63,34 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             return;
         }
         
-        const randomizedCards = randomCards(); // Call the randomCards function
-        onStart(randomizedCards); // Pass the randomizedCards to the onStart function
+        const randomizedCards = randomCards();
+        onStart(randomizedCards);
         setVisibility(false);
         setNumberOfCards("");
         setSelectedCategories([]);
         setAvailableCategories([]);
         setAvailableCards([]);
+    }
+
+    function uniqueCategories(cards) {
+        let categories = [];
+        cards.forEach(card => {
+            categories.push(...card.category);
+        });
+        return [...new Set(categories)];
+    }
+
+    function toggleCategory(category) {
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(selectedCategories.filter(c => c !== category));
+            if (!availableCategories.includes(category)) {
+                setAvailableCategories([...availableCategories, category].sort());
+            }
+        } else {
+            setSelectedCategories([...selectedCategories, category]);
+            setAvailableCategories(availableCategories.filter(c => c !== category).sort());
+        }
+
     }
 
     function randomCards() {     
