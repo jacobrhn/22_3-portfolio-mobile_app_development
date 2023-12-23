@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, View, ScrollView, Text} from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, View} from 'react-native'
+
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
+import CategorySelector from './CategorySelector';
+import InputLabel from './InputLabel';
 
 // TODO: now, in initiol loading ther is no activity indicator
 
@@ -144,39 +147,25 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                         <>
                             <IconButton onPress={cancelSessionPrompt} style={styles.pressableIconBack} iconName='cancel'/>
                             {loading ? (
-                                <Text style={styles.inputLabel}>No cards available</Text>
+                                <InputLabel label="No cards available" />
                             ) : (
                                 <>
-                                <Text style={styles.inputLabel}>Categories:</Text>
+                                <InputLabel label="Categories:" />
                                 <View style={styles.categoriesContainer}>
-                                    <ScrollView style={styles.categoriesScrollable} horizontal={true}>
-                                    {selectedCategories.map((category, index) => (
-                                        <TextButton 
-                                            key={index} 
-                                            text={category} 
-                                            onPress={() => toggleCategory(category)} 
-                                            pale={false}
-                                            style={styles.categorySelected}
-                                        />
-                                    ))}
-                                    {availableCategories.map((category, index) => (
-                                        <TextButton 
-                                            key={index} 
-                                            text={category} 
-                                            onPress={() => toggleCategory(category)} 
-                                            pale={true}
-                                            style={styles.categoryUnselected}
-                                        />
-                                    ))}
-                                    </ScrollView>
+                                    <CategorySelector
+                                        selectedCategories={selectedCategories} 
+                                        availableCategories={availableCategories}
+                                        setSelectedCategories={setSelectedCategories}
+                                        setAvailableCategories={setAvailableCategories}
+                                    />
                                 </View>
-                                <Text style={styles.inputLabel}>Number of cards:</Text>
+                                <InputLabel label="Number of cards:" />
                                 <TextInput 
-                                style={styles.inputText}
-                                keyboardType='numeric'
-                                onChangeText={setNumberOfCards}
-                                value={numberOfCards}
-                                maxLength={3}
+                                    style={styles.inputText}
+                                    keyboardType='numeric'
+                                    onChangeText={setNumberOfCards}
+                                    value={numberOfCards}
+                                    maxLength={3}
                                 />
                                 <TextButton 
                                     text="Start" 
@@ -221,32 +210,8 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     categoriesContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
         width: '80%',
 
-    },
-    categoryNew: {
-        borderWidth:0,
-        padding: 5,
-        margin: 2,
-        width: 'auto',
-        height: 40,
-    },
-    categoryUnselected: {
-        padding: 5,
-        margin: 2,
-        width: 'auto',
-        height: 40,
-    },
-    categorySelected: {
-        padding: 5,
-        margin: 2,
-        width: 'auto',
-        height: 40,
-    },
-    categoriesScrollable: {
-        height: 100,
     },
     inputLabel: {
         marginTop: 10,
