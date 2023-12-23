@@ -22,13 +22,20 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             setSelectedCategories(editingCard.category);
             setAvailableCategories(getUniqueCategories(cards, editingCard.category).sort());
         }
+        else {
+            setInputText1("");
+            setInputText2("");
+            setInputText3("");
+            setSelectedCategories([]);
+            setAvailableCategories(getUniqueCategories(cards).sort());
+        }
     }, [editingCard]);
 
-    function getUniqueCategories(cards, selectedCategories) {
+    function getUniqueCategories(cards, selectedCategories = null) {
         let allCategories = [];
+        if (!selectedCategories) selectedCategories = [];
         cards.forEach(card => {
-            allCategories = [...allCategories, ...card.category];
-        });
+            allCategories = selectedCategories ? [...allCategories, ...card.category] : [...allCategories, ...card.category];});
         const uniqueCategories = [...new Set(allCategories)];
         return uniqueCategories.filter(category => !selectedCategories.includes(category));
     }
@@ -145,7 +152,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         <Text style={styles.inputLabel}>Categories:</Text>
                         <View style={{width:'80%'}}>
                         <CategorySelector 
-                            buttonText='New ...'
+                            buttonText=' New ...  '
                             buttonAction={inputNewCategory} 
                             selectedCategories={selectedCategories} 
                             availableCategories={availableCategories}
