@@ -8,11 +8,11 @@ export default CategorySelector = ({ buttonText = null, buttonAction = null, sel
         if (selectedCategories.includes(category)) {
             setSelectedCategories(selectedCategories.filter(c => c !== category));
             if (!availableCategories.includes(category)) {
-                setAvailableCategories([...availableCategories, category]);
+                setAvailableCategories([...availableCategories, category].sort());
             }
         } else {
-            setSelectedCategories([...selectedCategories, category]);
-            setAvailableCategories(availableCategories.filter(c => c !== category));
+            setSelectedCategories([...selectedCategories, category].sort());
+            setAvailableCategories(availableCategories.filter(c => c !== category).sort());
         }
     }
 
@@ -83,3 +83,6 @@ const styles = StyleSheet.create({
         height: 100,
     }
 })
+
+
+What is the best method to develop a multi-plattform mobile app?112345
