@@ -58,19 +58,21 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     categoryNew: {
-        borderWidth:0,
+        borderWidth:1,
         padding: 5,
         margin: 2,
         width: 'auto',
         height: 40,
     },
     categoryUnselected: {
+        borderWidth:1,
         padding: 5,
         margin: 2,
         width: 'auto',
         height: 40,
     },
     categorySelected: {
+        borderWidth:1,
         padding: 5,
         margin: 2,
         width: 'auto',
