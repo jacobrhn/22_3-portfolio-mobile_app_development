@@ -31,19 +31,20 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             Firebase.getCards().then(cards => {
                 setAvailableCards(cards);
                 setNumberOfCards(cards.length.toString());
-                let categories = [];
-                cards.forEach(card => {
-                    if (!categories.includes(card.category)) {
-                        categories.push(card.category);
-                    }
-                });
-                setAvailableCategories(categories);
-                console.log("useFocusEffect(), available categories", availableCategories, "\n------------------")
+                setAvailableCategories(uniqueCategories(cards));
                 setLoading(false);
             }
             );
         }, [])
     );
+
+    function uniqueCategories(cards) {
+        let categories = [];
+        cards.forEach(card => {
+            categories.push(...card.category);
+        });
+        return [...new Set(categories)];
+    }
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
