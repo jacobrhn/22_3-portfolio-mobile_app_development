@@ -53,7 +53,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                 },
                 {
                     text: 'OK',
-                    onPress: (category) => addCategory(category),
+                    onPress: (category) => addCategory(category.trim().toLowerCase()),
                 },
             ],
             'plain-text',
