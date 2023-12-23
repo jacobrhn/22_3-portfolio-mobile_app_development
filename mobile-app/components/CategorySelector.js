@@ -1,0 +1,79 @@
+import React from 'react';
+import { View, ScrollView, StyleSheet} from 'react-native';
+import TextButton from './TextButton'; // Adjust this import as needed
+
+export default CategorySelector = ({ buttonText, buttonAction, selectedCategories, availableCategories, setSelectedCategories, setAvailableCategories }) => {
+
+    function toggleCategory(category) {
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(selectedCategories.filter(c => c !== category));
+            if (!availableCategories.includes(category)) {
+                setAvailableCategories([...availableCategories, category]);
+            }
+        } else {
+            setSelectedCategories([...selectedCategories, category]);
+            setAvailableCategories(availableCategories.filter(c => c !== category));
+        }
+    }
+
+    return (
+        <View style={styles.categoriesContainer}>
+            <ScrollView style={styles.categoriesScrollable} horizontal={true}>
+                <TextButton 
+                    text={buttonText}
+                    onPress={() => buttonAction()} 
+                    pale={true}
+                    style={styles.categoryNew}
+                />
+                {selectedCategories.map((category, index) => (
+                    <TextButton 
+                        key={index} 
+                        text={category} 
+                        onPress={() => toggleCategory(category)} 
+                        pale={false}
+                        style={styles.categorySelected}
+                    />
+                ))}
+                {availableCategories.map((category, index) => (
+                    <TextButton 
+                        key={index} 
+                        text={category} 
+                        onPress={() => toggleCategory(category)} 
+                        pale={true}
+                        style={styles.categoryUnselected}
+                    />
+                ))}
+            </ScrollView>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    categoriesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        width: '80%',
+    },
+    categoryNew: {
+        borderWidth:0,
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categoryUnselected: {
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categorySelected: {
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categoriesScrollable: {
+        height: 100,
+    }
+})

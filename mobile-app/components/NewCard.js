@@ -3,6 +3,7 @@ import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaVi
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
+import CategorySelector from './CategorySelector';
 
 export default function NewCard({visible, onCancel, onSave, editingCard, cards, setCards }) {
     const [inputText1, setInputText1] = useState("");
@@ -30,18 +31,6 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
         });
         const uniqueCategories = [...new Set(allCategories)];
         return uniqueCategories.filter(category => !selectedCategories.includes(category));
-    }
-
-    function toggleCategory(category) {
-        if (selectedCategories.includes(category)) {
-            setSelectedCategories(selectedCategories.filter(c => c !== category));
-            if (!availableCategories.includes(category)) {
-                setAvailableCategories([...availableCategories, category]);
-            }
-        } else {
-            setSelectedCategories([...selectedCategories, category]);
-            setAvailableCategories(availableCategories.filter(c => c !== category));
-        }
     }
     
     function addCategory(category) {
@@ -155,35 +144,14 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         value={inputText2}
                     />
                     <Text style={styles.inputLabel}>Categories:</Text>
-                    <View style={styles.categoriesContainer}>
-                        <ScrollView style={styles.categoriesScrollable} horizontal={true}>
-                            <TextButton 
-                            text="New ..." 
-                            onPress={() => inputNewCategory()} 
-                            pale={true}
-                            style={styles.categoryNew}
-                        />
-                        {selectedCategories.map((category, index) => (
-                            <TextButton 
-                                key={index} 
-                                text={category} 
-                                onPress={() => toggleCategory(category)} 
-                                pale={false}
-                                style={styles.categorySelected}
-                            />
-                        ))}
-                        {availableCategories.map((category, index) => (
-                            <TextButton 
-                                key={index} 
-                                text={category} 
-                                onPress={() => toggleCategory(category)} 
-                                pale={true}
-                                style={styles.categoryUnselected}
-                            />
-                        ))}
-                        </ScrollView>
-
-                    </View>
+                    <CategorySelector 
+                        buttonText='New ...'
+                        buttonAction={inputNewCategory} 
+                        selectedCategories={selectedCategories} 
+                        availableCategories={availableCategories}
+                        setSelectedCategories={setSelectedCategories}
+                        setAvailableCategories={setAvailableCategories}
+                    />
                     {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
                     <TextButton 
                         text='Save' 
@@ -230,7 +198,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         width: '80%',
-
     },
     categoryNew: {
         borderWidth:0,

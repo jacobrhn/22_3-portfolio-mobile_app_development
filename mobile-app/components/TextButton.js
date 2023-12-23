@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 export default function TextButton({text, onPress, style, pale = false}) {
     if (pale) {
         return (
-            <Pressable style={[styles.button, {backgroundColor: 'white', borderWidth: 2}, style]} onPress={onPress}>
+            <Pressable style={[styles.button, {backgroundColor: 'transparent', borderWidth: 2}, style]} onPress={onPress}>
                 <Text style={[styles.text, {color: '#4a4a8f'}]}>{text}</Text>
             </Pressable>
         )

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert, TouchableOpacity , ScrollView} from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -9,7 +9,6 @@ import NewCard from '../../../components/NewCard';
 import IconButton from '../../../components/IconButton';
 import ManageCardsListItem from '../../../components/ManageCard';
 import Firebase from '../../../components/Firebase';
-import CategoryFilter from '../../../components/CategoryFilter';
 
 export default function App() {
 
@@ -17,9 +16,13 @@ export default function App() {
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
   const navigation = useNavigation();
-  const [filterCategories, setFilterCategories] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  
+  const [selectedFilterCategories, setSelectedFilterCategories] = useState([]);
+  const [availableFilterCategories, setAvailableFilterCategories] = useState([]);
+
+  useEffect(() => {
+    setAvailableFilterCategories(getUniqueCategories(cards));
+  }, [cards]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -61,6 +64,13 @@ export default function App() {
     setShowInputDialog(true);
   }
 
+  function clearFilters() {
+    setSelectedFilterCategories([]);
+    setAvailableFilterCategories(getUniqueCategories(cards));
+  }
+
+
+
   function getUniqueCategories(cards) {
     let allCategories = [];
     cards.forEach(card => {
@@ -68,19 +78,6 @@ export default function App() {
     });
     const uniqueCategories = [...new Set(allCategories)];
     return uniqueCategories;
-  }
-
-  function onCategorySelect(category) {
-
-    if (category === 'All') {
-        setFilterCategories([]);
-    }
-    else if (filterCategories.includes(category)) {
-        setFilterCategories(filterCategories.filter(c => c !== category));
-    }
-    else {
-        setFilterCategories([...filterCategories, category]);
-    }
   }
 
   content = 
@@ -122,23 +119,30 @@ export default function App() {
       <View style={styles.displayAllCardsContainer}>
         {cards.length > 0 ? (
           <>
-          <View style={styles.filterContainer}>
+          <View style={styles.filterExpandable}>
             <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
               <Text style={{fontStyle: 'italic'}}>Beta: Filter</Text>
             </TouchableOpacity>
             {showFilter && (
               <>
-                <Text>{filterCategories}</Text>
                 <View style={styles.filterContainer}>
-                  <CategoryFilter categories={getUniqueCategories(cards)} 
-                  onCategorySelect={onCategorySelect} 
-                  style={styles.categoryButton}/>
+                <View>
+                  <CategorySelector 
+                  buttonText='Clear'
+                  buttonAction={clearFilters} 
+                  selectedCategories={selectedFilterCategories} 
+                  availableCategories={availableFilterCategories}
+                  setSelectedCategories={setSelectedFilterCategories}
+                  setAvailableCategories={setAvailableFilterCategories}
+                />
+                </View>
                 </View>
               </>
           )}
           </View>
+
           <FlatList
-            data={filterCategories.length > 0 ? cards.filter(card => card.category.some(c => filterCategories.includes(c))) : cards}
+            data={selectedFilterCategories.length > 0 ? cards.filter(card => card.category.some(c => selectedFilterCategories.includes(c))) : cards}
             style={{ width: '95%'}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
@@ -226,15 +230,14 @@ const styles = StyleSheet.create({
     height: '80%',
     alignItems: 'center',
   },
-  filterContainer: {
+  filterExpandable:{
     width: '95%',
-    marginVertical: 10,
+  },
+  filterContainer: {
+    borderRadius: 10,
+    borderWidth: 1,
 },
 flatList: {
     marginBottom: 10,
 },
-categoryButton: {
-    width: 'auto',
-},
-
 });
