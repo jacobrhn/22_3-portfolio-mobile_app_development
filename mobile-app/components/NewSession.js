@@ -20,7 +20,16 @@ import Firebase from './Firebase';
 
 export default function NewSession({visible, setVisibility, onCancel, onStart}) {
     const [numberOfCards, setNumberOfCards] = useState("");
+    const [selectedCards, setSelectedCards] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    useEffect(() => {
+        let filteredCards = avialableCards.filter(card => 
+            card.category.some(category => selectedCategories.includes(category))
+        );
+        console.log("filteredCards: ", filteredCards);
+        setSelectedCards(filteredCards);
+
+    }, [selectedCategories]);
     const [avialableCards, setAvailableCards] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -94,13 +103,13 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     }
 
     function randomCards() {     
-        let filteredCards = avialableCards.filter(card => selectedCategories.includes(card.category)); 
+        let filteredCards = selectedCards.filter(card => selectedCategories.includes(card.category)); 
         setAvailableCards(filteredCards);
         let randomCards = [];
         for (let i = 0; i < numberOfCards; i++) {
-        let randomIndex = Math.floor(Math.random() * avialableCards.length);
-        randomCards.push(avialableCards[randomIndex]);
-        avialableCards.splice(randomIndex, 1);
+        let randomIndex = Math.floor(Math.random() * selectedCards.length);
+        randomCards.push(selectedCards[randomIndex]);
+        selectedCards.splice(randomIndex, 1);
         }
         return randomCards;
 
@@ -117,19 +126,12 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                         <ActivityIndicator size="large" color="#4a4a8f" />
                     ) : (
                         <>
+                            <Text>{selectedCards.map(card => card.front_text).join(" ")}</Text>
                             <IconButton onPress={cancelSessionPrompt} style={styles.pressableIconBack} iconName='cancel'/>
                             {avialableCards.length === 0 ? (
                                 <Text style={styles.inputLabel}>No cards available</Text>
                             ) : (
                                 <>
-                                <Text style={styles.inputLabel}>number of cards:</Text>
-                                <TextInput 
-                                style={styles.inputText}
-                                keyboardType='numeric'
-                                onChangeText={setNumberOfCards}
-                                value={numberOfCards}
-                                maxLength={3}
-                                />
                                 <Text style={styles.inputLabel}>Categories:</Text>
                                 <View style={styles.categoriesContainer}>
                                     <ScrollView style={styles.categoriesScrollable} horizontal={true}>
@@ -153,6 +155,14 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                                     ))}
                                     </ScrollView>
                                 </View>
+                                <Text style={styles.inputLabel}>number of cards:</Text>
+                                <TextInput 
+                                style={styles.inputText}
+                                keyboardType='numeric'
+                                onChangeText={setNumberOfCards}
+                                value={numberOfCards}
+                                maxLength={3}
+                                />
                                 <TextButton 
                                     text="Start" 
                                     onPress={() => {onStartPress()}} 
