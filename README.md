@@ -19,14 +19,14 @@ Unverhergesehen wurde die Gruppe auf eine Person reduziert, weshalb vereinbart w
 ### Übersicht der Requirements
 Requirement                    | Kategorie  | Implementation | Dokumentation
 ---                            |---         |---             |---
-Verwaltung: edit/create/delete | Must       |✅              |tbd
-Verwaltung: Korrekte Antwort   | Must       |                |tbd
-Quiz: Dynamische Kartenanzahl  | Must       |✅              |tbd
-Quiz: Zufällige Kartenauswahl  | Must       |✅              |tbd
-Quiz: Boolsche Beantwortung    | Must       |✅              |tbd
+Verwaltung: edit/create/delete | Must       |✅              |[link](#editcreatedelete)
+Verwaltung: Korrekte Antwort   | Must       |⚠️               |[link](#korrekte-antwort)
+Quiz: Dynamische Kartenanzahl  | Must       |✅              |[link](#quiz-kartenanzahl--kategorie-auswahl)
+Quiz: Zufällige Kartenauswahl  | Must       |✅              |[link](#quiz-kartenanzahl--kategorie-auswahl)
+Quiz: Boolsche Beantwortung    | Must       |✅              |vgl. [Korrekte Antwort](#korrekte-antwort)
 ---                            |---         |---             |---
-Karten- / Lern-Kategorien      | NiceToHave |✅              |tbd
-Cloudspeicherung               | NiceToHave |✅              |tbd
+Karten- / Lern-Kategorien      | NiceToHave |✅              |[link](#karten---lern-kategorien)
+Cloudspeicherung               | NiceToHave |✅              |[link](#cloudspeicherung)
 tbd | tbd | tbd | tbd
 
 ## Umsetzung
