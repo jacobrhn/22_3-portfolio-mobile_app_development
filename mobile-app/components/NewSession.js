@@ -106,7 +106,6 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                         <ActivityIndicator size="large" color="#4a4a8f" />
                     ) : (
                         <>
-                            <Text>{selectedCards.map(card => card.front_text).join(" ")}</Text>
                             <IconButton onPress={cancelSessionPrompt} style={styles.pressableIconBack} iconName='cancel'/>
                             {avialableCards.length === 0 ? (
                                 <Text style={styles.inputLabel}>No cards available</Text>
