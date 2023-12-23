@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -18,7 +18,7 @@ export default function App() {
   const [editingCard, setEditingCard] = useState(null);
   const navigation = useNavigation();
   const [filterCategories, setFilterCategories] = useState([]);
-
+  const [showFilter, setShowFilter] = useState(false);
   
 
   useFocusEffect(
@@ -71,12 +71,17 @@ export default function App() {
   }
 
   function onCategorySelect(category) {
-    if (filterCategories.includes(category)) {
+
+    if (category === 'All') {
+        setFilterCategories([]);
+    }
+    else if (filterCategories.includes(category)) {
         setFilterCategories(filterCategories.filter(c => c !== category));
-    } else {
+    }
+    else {
         setFilterCategories([...filterCategories, category]);
     }
-}
+  }
 
   content = 
     <View style={styles.noCards}>
@@ -98,7 +103,6 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.front_text}>manage</Text>
         <IconButton onPress={() => {setEditingCard(null); setShowInputDialog(true)}} style={styles.pressableIconNewCard} />
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
@@ -115,11 +119,24 @@ export default function App() {
         // database={database}
       />
       </View>
-      <View>
-      <CategoryFilter categories={getUniqueCategories(cards)} onCategorySelect={onCategorySelect} />
-      </View>
       <View style={styles.displayAllCardsContainer}>
         {cards.length > 0 ? (
+          <>
+          <View style={styles.filterContainer}>
+            <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
+              <Text style={{fontStyle: 'italic'}}>Filter</Text>
+            </TouchableOpacity>
+            {showFilter && (
+              <>
+                <Text>{filterCategories}</Text>
+                <View style={styles.filterContainer}>
+                  <CategoryFilter categories={getUniqueCategories(cards)} 
+                  onCategorySelect={onCategorySelect} 
+                  style={styles.categoryButton}/>
+                </View>
+              </>
+          )}
+          </View>
           <FlatList
             data={filterCategories.length > 0 ? cards.filter(card => card.category.some(c => filterCategories.includes(c))) : cards}
             style={{ width: '95%'}}
@@ -128,6 +145,8 @@ export default function App() {
             <ManageCardsListItem card={item} onPress={onCardClick} />
             )}
           />
+          
+          </>
         ) : (
           <View style={styles.noCards}>
             <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
@@ -214,7 +233,8 @@ const styles = StyleSheet.create({
 flatList: {
     marginBottom: 10,
 },
-categoryFilter: {
-    marginTop: 10,
+categoryButton: {
+    width: 'auto',
 },
+
 });

@@ -1,12 +1,15 @@
 import { View , Button} from "react-native";
+import TextButton from "./TextButton";
 
-export default function CategoryFilter({ categories, onCategorySelect }) {
+export default function CategoryFilter({ categories, onCategorySelect, style}) {
     return (
         <View>
             {categories.map((category, index) => (
-                <Button key={index} title={category} onPress={() => onCategorySelect(category)} />
+                <>
+                    <Button key={index} title={category} onPress={() => onCategorySelect(category)} />
+                </>
             ))}
-            <Button title="No Category" onPress={() => onCategorySelect('No Category')} />
+            <Button title="All" onPress={() => onCategorySelect('All')} pale={true}/>
         </View>
     );
 }
