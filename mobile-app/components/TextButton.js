@@ -1,15 +1,15 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 
-export default function TextButton({text, onPress, style, pale = false}) {
+export default function TextButton({text, onPress, style, textStyle, pale = false}) {
     if (pale) {
         return (
             <Pressable style={[styles.button, {backgroundColor: 'transparent', borderWidth: 2}, style]} onPress={onPress}>
-                <Text style={[styles.text, {color: '#4a4a8f'}]}>{text}</Text>
+                <Text style={[styles.text, {color: '#4a4a8f'}, textStyle]}>{text}</Text>
             </Pressable>
         )
     } else return (
         <Pressable style={[styles.button, style]} onPress={onPress}>
-            <Text style={styles.text}>{text}</Text>
+            <Text style={[styles.text, textStyle]}>{text}</Text>
         </Pressable>
     )
 }
@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
       },
       text: {
         fontSize: 20,
-        color: 'white',
+        color: 'white',        
       },
 })

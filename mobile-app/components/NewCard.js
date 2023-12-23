@@ -139,6 +139,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                             onChangeText={setInputText1}
                             value={inputText1}
                             maxLength={256}
+                            placeholderTextColor={"#4a4a8f"}
                         />
                         <Text style={styles.inputLabel}>Back-Side Text:</Text>
                         <TextInput 
@@ -148,11 +149,12 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                             onChangeText={setInputText2}
                             onSubmitEditing={() => {saveCard()}}
                             value={inputText2}
+                            placeholderTextColor={"#4a4a8f"}
                         />
                         <Text style={styles.inputLabel}>Categories:</Text>
                         <View style={{width:'80%'}}>
                         <CategorySelector 
-                            buttonText=' New ...  '
+                            buttonText='New  '
                             buttonAction={inputNewCategory} 
                             selectedCategories={selectedCategories} 
                             availableCategories={availableCategories}
