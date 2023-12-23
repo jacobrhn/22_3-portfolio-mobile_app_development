@@ -1,11 +1,23 @@
-# Portfolioprüfung
-_Erarbeitet im Rahmen des Modulbausteins "Moderne Programmierkonzepte" im Rahmen einer Vorlesung von Prof. Dr. Behrens an der DHBW Lörrach_
+# Portfolioprüfung: Karteikarten App
+_Erarbeitet im Rahmen des Modulbausteins "Moderne Programmierkonzepte" im 3. Semester des Studiengangs WWI22 bei Prof. Dr. Behrens (@behrends) an der @DHBWLoerrach_
 
-_Bearbeitet von: Jacob Ruhnau; Oktober-Dezember 2023_
+_Bearbeitet von: Jacob Ruhnau im Dezember 2023_
 
 ---
 #### TABLE OF CONTENTS
-- [Introduction](#introduction)
+  - [Einführung](#einführung)
+  - [Besonderheiten](#besonderheiten)
+  - [Übersicht der Requirements](#übersicht-der-requirements)
+  - [Umsetzung](#umsetzung)
+  - [App-Aufbau](#app-aufbau)
+  - [Verwaltung](#verwaltung)
+      - [Cloudspeicherung](#cloudspeicherung)
+      - [edit/create/delete](#editcreatedelete)
+      - [Karten- / Lern-Kategorien](#karten---lern-kategorien)
+  - [Quiz](#quiz)
+      - [Quiz: Kartenanzahl & Kategorie-Auswahl](#quiz-kartenanzahl--kategorie-auswahl)
+      - [Korrekte Antwort](#korrekte-antwort)
+      - [Boolsche Beantwortung](#boolsche-beantwortung)
 
 ## Einführung
 ### Voraussetzungen 
