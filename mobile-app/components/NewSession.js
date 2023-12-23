@@ -22,6 +22,10 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     const [numberOfCards, setNumberOfCards] = useState("");
     const [selectedCards, setSelectedCards] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [avialableCards, setAvailableCards] = useState([]);
+    const [availableCategories, setAvailableCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         let filteredCards = avialableCards.filter(card => 
             card.category.some(category => selectedCategories.includes(category))
@@ -30,9 +34,14 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         setSelectedCards(filteredCards);
 
     }, [selectedCategories]);
-    const [avialableCards, setAvailableCards] = useState([]);
-    const [availableCategories, setAvailableCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (selectedCategories.length > 0) {
+            setNumberOfCards(selectedCards.length.toString());
+        } else {
+            setNumberOfCards(avialableCards.length.toString());
+        }
+    }, [selectedCategories, selectedCards, avialableCards]);
 
     useFocusEffect(
         React.useCallback(() => {
