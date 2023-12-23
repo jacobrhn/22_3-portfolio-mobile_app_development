@@ -10,8 +10,6 @@ import Firebase from './Firebase';
 import CategorySelector from './CategorySelector';
 import InputLabel from './InputLabel';
 
-// TODO: now, in initiol loading ther is no activity indicator
-
 export default function NewSession({visible, setVisibility, onCancel, onStart}) {
     const [numberOfCards, setNumberOfCards] = useState("");
     const [selectedCards, setSelectedCards] = useState([]);

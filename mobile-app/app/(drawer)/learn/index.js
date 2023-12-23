@@ -68,7 +68,7 @@ export default function App() {
     </View>;
 
   if (cards.length > 0) {
-    const card = cards[index]; // This line should be here
+    const card = cards[index];
     content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
 
