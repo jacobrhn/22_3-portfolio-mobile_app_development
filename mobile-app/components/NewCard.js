@@ -97,7 +97,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     }
 
     function deleteCard() {
-        Alert.alert('Delete Card','Do you realy want to delete "'+ editingCard.id + '"?', [
+        Alert.alert('Delete Card','Do you realy want to delete "'+ editingCard.front_text + '"?', [
           {text: 'Cancel', style: 'cancel'},
           {text: 'Delete', style: 'destructive', onPress: deleteCardFromData},
         ]);
@@ -122,45 +122,44 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     <ActivityIndicator size="large" color="#4a4a8f" />
                     ) : (
                         <>
-
-                <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
-                <Text style={styles.inputLabel}>Front-Side Text:</Text>
-                <TextInput 
-                    style={[styles.inputText, styles.inputText1]} 
-                    placeholder='Input the question here...'
-                    multiline={true}
-                    returnKeyType='next'
-                    onChangeText={setInputText1}
-                    value={inputText1}
-                    maxLength={256}
-                />
-                <Text style={styles.inputLabel}>Back-Side Text:</Text>
-                <TextInput 
-                    style={styles.inputText}
-                    placeholder='Input the answer here...'
-                    returnKeyType= 'done'
-                    onChangeText={setInputText2}
-                    onSubmitEditing={() => {saveCard()}}
-                    value={inputText2}
-                />
-                <Text style={styles.inputLabel}>Categories:</Text>
-                <View style={{width:'80%'}}>
-                <CategorySelector 
-                    buttonText='New ...'
-                    buttonAction={inputNewCategory} 
-                    selectedCategories={selectedCategories} 
-                    availableCategories={availableCategories}
-                    setSelectedCategories={setSelectedCategories}
-                    setAvailableCategories={setAvailableCategories}
-                />
-                </View>
-                {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
-                <TextButton 
-                    text='Save' 
-                    onPress={() => {saveCard()}}
-                /> 
-                </>
-                )}
+                        <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
+                        <Text style={styles.inputLabel}>Front-Side Text:</Text>
+                        <TextInput 
+                            style={[styles.inputText, styles.inputText1]} 
+                            placeholder='Input the question here...'
+                            multiline={true}
+                            returnKeyType='next'
+                            onChangeText={setInputText1}
+                            value={inputText1}
+                            maxLength={256}
+                        />
+                        <Text style={styles.inputLabel}>Back-Side Text:</Text>
+                        <TextInput 
+                            style={styles.inputText}
+                            placeholder='Input the answer here...'
+                            returnKeyType= 'done'
+                            onChangeText={setInputText2}
+                            onSubmitEditing={() => {saveCard()}}
+                            value={inputText2}
+                        />
+                        <Text style={styles.inputLabel}>Categories:</Text>
+                        <View style={{width:'80%'}}>
+                        <CategorySelector 
+                            buttonText='New ...'
+                            buttonAction={inputNewCategory} 
+                            selectedCategories={selectedCategories} 
+                            availableCategories={availableCategories}
+                            setSelectedCategories={setSelectedCategories}
+                            setAvailableCategories={setAvailableCategories}
+                        />
+                        </View>
+                        {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
+                        <TextButton 
+                            text='Save' 
+                            onPress={() => {saveCard()}}
+                        /> 
+                        </>
+                    )}
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </Modal>
