@@ -12,7 +12,6 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [availableCategories, setAvailableCategories] = useState([]);
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
     const [loading, setLoading] = useState(false);
-
     
     useEffect(() => {
         if (editingCard) {
@@ -20,8 +19,18 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             setInputText2(editingCard.back_text);
             setInputText3(editingCard.text_3);
             setSelectedCategories(editingCard.category);
+            setAvailableCategories(getUniqueCategories(cards, editingCard.category).sort());
         }
     }, [editingCard]);
+
+    function getUniqueCategories(cards, selectedCategories) {
+        let allCategories = [];
+        cards.forEach(card => {
+            allCategories = [...allCategories, ...card.category];
+        });
+        const uniqueCategories = [...new Set(allCategories)];
+        return uniqueCategories.filter(category => !selectedCategories.includes(category));
+    }
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
