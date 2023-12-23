@@ -124,7 +124,7 @@ export default function App() {
           <>
           <View style={styles.filterContainer}>
             <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
-              <Text style={{fontStyle: 'italic'}}>Filter</Text>
+              <Text style={{fontStyle: 'italic'}}>Beta: Filter</Text>
             </TouchableOpacity>
             {showFilter && (
               <>
