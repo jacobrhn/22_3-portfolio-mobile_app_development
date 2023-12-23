@@ -67,7 +67,9 @@ export default function App() {
       <TextButton text={'Start a Session'} onPress={() => setSessionPromptVisible(true)} style={styles.startSessionButton}/>
     </View>;
 
-  if (cards.length > 0) {
+  console.log(index);
+
+  if (cards.length > 0 && index < cards.length) {
     const card = cards[index];
     content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
