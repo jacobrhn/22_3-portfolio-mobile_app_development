@@ -107,7 +107,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         cards.forEach(card => {
             categories.push(...card.category);
         });
-        return [...new Set(categories)];}
+        return [...new Set(categories)].sort();}
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {

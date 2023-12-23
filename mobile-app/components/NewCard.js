@@ -29,7 +29,9 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             setSelectedCategories([]);
             setAvailableCategories(getUniqueCategories(cards).sort());
         }
-    }, [editingCard]);
+    }, [editingCard, visible]);
+
+    
 
     function getUniqueCategories(cards, selectedCategories = null) {
         let allCategories = [];
@@ -85,12 +87,12 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Please enter text1 and text2');
             return;
         };
-        if (trimmedText1.length > 256) {
-            alert('Front text cannot exceed 256 characters');
+        if (trimmedText1.length > 64) {
+            alert('Front text cannot exceed 64 characters');
             return;
         }
-        if (trimmedText2.length > 64) {
-            alert('Front text cannot exceed 64 characters');
+        if (trimmedText2.length > 18) {
+            alert('Front text cannot exceed 18 characters');
             return;
         }
         setLoading(true);
