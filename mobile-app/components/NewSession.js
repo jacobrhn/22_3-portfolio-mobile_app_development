@@ -19,9 +19,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         let filteredCards = avialableCards.filter(card => 
             card.category.some(category => selectedCategories.includes(category))
         );
-        console.log("filteredCards: ", filteredCards);
         setSelectedCards(filteredCards);
-
     }, [selectedCategories]);
 
     useEffect(() => {
