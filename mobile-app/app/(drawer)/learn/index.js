@@ -7,15 +7,14 @@ import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
 import IconButton from '../../../components/IconButton';
 import NewSession from '../../../components/NewSession';
-import InputLabel from '../../../components/InputLabel';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
-  const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);// TODO
-  const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);// TODO
+  const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);
+  const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);
   const navigation = useNavigation();
 
   let prevIndex = index ? index - 1 : 0;
@@ -60,24 +59,21 @@ export default function App() {
 
   let content = 
     <View style={styles.noCards}>
-    <Text >Latest Score: </Text>
-    <Text >cards answered correct: {cardsAnsweredCorrect.length}</Text>
-    <Text >cards answered incorrect: {cardsAnsweredIncorrect.length}</Text>
-    <Text style={{color: '#4a4a8f', fontWeight: '600', fontSize: 34}} onPress={() => setSessionPromptVisible(true)}>Start a Session</Text>
+      <View style={styles.latestScoreContainer}>
+        <Text style={styles.scoreHeading} >Latest Score: </Text>
+        <Text style={styles.scoreText}>Answered correct: {cardsAnsweredCorrect.length}</Text>
+        <Text style={styles.scoreText}>Answered incorrect: {cardsAnsweredIncorrect.length}</Text>
+      </View>
+      <TextButton text={'Start a Session'} onPress={() => setSessionPromptVisible(true)} style={styles.startSessionButton}/>
     </View>;
 
   if (cards.length > 0) {
     const card = cards[index]; // This line should be here
     content = <Card front_text={card.front_text} back_text={card.back_text} />;
   }
-  console.log("-------------------");
-  console.log('cards: ', cards.length, );
-  console.log('cardsAnsweredCorrect: ', cardsAnsweredCorrect.length, );
-  console.log('cardsAnsweredIncorrect: ', cardsAnsweredIncorrect.length, );
-  console.log('index: ', index);
-  console.log('prevIndex: ', prevIndex);
 
   return (
+    <>
     <SafeAreaView style={styles.container}>
       <NewSession 
         visible={sessionPromptVisible} 
@@ -86,7 +82,6 @@ export default function App() {
         onStart={startSession} 
       />
       <View style={styles.topNavigationContainer}>
-        <Text style={styles.front_text}>learn</Text>
         <IconButton onPress={() => navigation.openDrawer()} style={styles.pressableIconOpenDrawer} iconName='menu' />
       </View>
       <View style={styles.cardDisplayContainer}>
@@ -98,12 +93,16 @@ export default function App() {
       {cards.length > 0 ? <TextButton text={'Answer'} onPress={() => answerDialog()} /> : null}
       {cards.length > 1 ? <IconButton iconName={'skip-next'} onPress={() => setIndex((index +1) % cards.length)} style={[styles.pressableIconNextCard]}/> : null}
       </View>
-    <StatusBar style="auto" />
-  </SafeAreaView>
+    
+    </SafeAreaView>
+    <StatusBar style='auto'/>
+    </>
+    
 );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     alignItems: 'center',
@@ -127,16 +126,6 @@ const styles = StyleSheet.create({
     height: '10%',
     alignItems: 'center',
   },
-  pressableIconNewCard: {
-    position: 'absolute',
-    right: 10,
-    top: 20,
-  },
-  pressableIconDeleteCard: { 
-    position: 'absolute',
-    right: 10,
-    top: 50,
-  },
   pressableIconOpenDrawer: { 
     position: 'absolute',
     left: 10,
@@ -155,12 +144,30 @@ const styles = StyleSheet.create({
   noCards: {
     margin: 50,
     color: 'gray',
-
+    alignItems: 'center',
   },
   noCardsText: {
     fontSize: 30,
     fontWeight: '300',
     textAlign: 'center',
     color: 'gray',
+  },
+  latestScoreContainer: {
+    marginBottom: 100,
+  },
+  scoreHeading: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#4a4a8f',
+  },
+  scoreText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#4a4a8f',
+  },
+  startSessionButton: {
+    marginTop: 20,
   },
 });
