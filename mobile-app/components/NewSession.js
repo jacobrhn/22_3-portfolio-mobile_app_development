@@ -109,7 +109,6 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             setSelectedCategories([...selectedCategories, category]);
             setAvailableCategories(availableCategories.filter(c => c !== category).sort());
         }
-
     }
 
     function randomCards() {
