@@ -74,6 +74,10 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         alert('No cards available\nPlease add cards to your collection in the "Manage" tab');
     }
 
+    function tooManyCards() {
+        alert('Too many cards\nPlease select a smaller number of cards');
+    }
+
     function cancelSessionPrompt() {
         setNumberOfCards("");
         setSelectedCategories([]);
@@ -83,6 +87,11 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     }
 
     function onStartPress() {
+        if (numberOfCards > selectedCards.length) {
+            tooManyCards();
+            setNumberOfCards(selectedCards.length.toString());
+            return;
+        }
         const randomizedCards = randomCards();
         onStart(randomizedCards);
         setVisibility(false);
@@ -161,7 +170,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                                     ))}
                                     </ScrollView>
                                 </View>
-                                <Text style={styles.inputLabel}>number of cards:</Text>
+                                <Text style={styles.inputLabel}>Number of cards:</Text>
                                 <TextInput 
                                 style={styles.inputText}
                                 keyboardType='numeric'
