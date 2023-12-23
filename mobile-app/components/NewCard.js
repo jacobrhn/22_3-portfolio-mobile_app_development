@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text, ActivityIndicator} from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, Text, ActivityIndicator} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -127,7 +127,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                 <Text style={styles.inputLabel}>Front-Side Text:</Text>
                 <TextInput 
                     style={[styles.inputText, styles.inputText1]} 
-                    placeholder='front_text'
+                    placeholder='Input the question here...'
                     multiline={true}
                     returnKeyType='next'
                     onChangeText={setInputText1}
@@ -137,7 +137,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                 <Text style={styles.inputLabel}>Back-Side Text:</Text>
                 <TextInput 
                     style={styles.inputText}
-                    placeholder='text2'
+                    placeholder='Input the answer here...'
                     returnKeyType= 'done'
                     onChangeText={setInputText2}
                     onSubmitEditing={() => {saveCard()}}
