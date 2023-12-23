@@ -7,6 +7,8 @@ import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
 
+// TODO: now, in initiol loading ther is no activity indicator
+
 export default function NewSession({visible, setVisibility, onCancel, onStart}) {
     const [numberOfCards, setNumberOfCards] = useState("");
     const [selectedCards, setSelectedCards] = useState([]);
@@ -23,14 +25,17 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                 setNumberOfCards(cards.length.toString());
                 setAvailableCategories(uniqueCategories(cards));
                 setLoading(false);
+                if (cards.length === 0) {
+                    noCardsAvailable();
+                    cancelSessionPrompt();
+                }
             })
             .catch(error => {
                 console.log(error);
                 onCancel();
             });
         }
-    }, [visible]);
-    
+    }, [visible]);  
 
     useEffect(() => {
         let filteredCards = availableCards.filter(card => 
@@ -64,6 +69,10 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             })
         }, [])
     );
+
+    function noCardsAvailable() {
+        alert('No cards available\nPlease add cards to your collection in the "Manage" tab');
+    }
 
     function cancelSessionPrompt() {
         setNumberOfCards("");
