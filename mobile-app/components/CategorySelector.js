@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     categoriesContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        width: '80%',
+        width: '100%',
     },
     categoryNew: {
         borderWidth:0,
