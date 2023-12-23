@@ -72,7 +72,7 @@ Die Authorisierung findet hartkodiert durch einen API-key statt.
 #### edit/create/delete
 Die Verwaltung der Karten erfolgt im Management-Bereich, welcher auch als Startseite der App dient. Hier kann der User Karten erstellen, bearbeiten und löschen, wofür sich ein Modal einblendet welches in [NewCard.js](mobile-app/components/NewCard.js). 
 
-Leere `NewCard.js` | Leerer Management Bereich | NewCard mit wählbaren Kategorien
+Leere `NewCard.js` | Befüllter Management Bereich | NewCard mit wählbaren Kategorien
 --- | --- | ---
 ![Navigation](docs/media/verwaltung/empty-new_card.png) | ![Management-Bereich](docs/media/verwaltung/management-w-cards.png)| ![Learning-Bereich](docs/media/verwaltung/new_card-w-categories.png)
 
@@ -84,6 +84,10 @@ Die Möglichkeit, eine Karte mit Kategorien zu versehen bietet erhelblichen Mehr
 Eine Karte kann keine, einer oder mehreren Kategorien angehören, welche als Array gespeichert werden. Es können beliebige benutzerdefinierte Kategorien hinzugefügt werden.
 Dies wird mit der Komponente [CategorySelector.js](mobile-app/components/CategorySelector.js) realisiert, welche in verschiedenen Ansichten verwendet wird. Sie besteht aus einem Horizontal-`ScrollView`, welcher die Kategorien anzeigt.  
 Die Komponente erhält das Karten-Array sowie die Zustandsvariablen `selectedCategories` und `availableCategories` und , welche die ausgewählten Kategorien enthält. Die Verfügbaren Kategorien werden aus den Verfügbaren Karten extrahiert und zur Auswahl Angeboten, etwaig schon ausgewählte Kategorien sind farbig Markiert, die Darstellung und Kategorisierung erfolgt dynamisch.
+
+Ausklappbare Filtermöglichkeit | Ausgewählte Filter
+--- | ---
+![](docs/media/filter/managed-no-filters.png) | ![](docs/media/filter/managed-selected-filters.png)
 
 ### Quiz
 Default `NewSession.js`|  Eingestellte Kartenanzahl & Kategorie-Auswahl
