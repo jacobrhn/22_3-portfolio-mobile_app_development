@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text} from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, View, ScrollView, Text} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -11,12 +11,29 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     const [numberOfCards, setNumberOfCards] = useState("");
     const [selectedCards, setSelectedCards] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [avialableCards, setAvailableCards] = useState([]);
+    const [availableCards, setAvailableCards] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        let filteredCards = avialableCards.filter(card => 
+        if (visible) {
+            setLoading(true); 
+            Firebase.getCards().then(cards => {
+                setAvailableCards(cards);
+                setNumberOfCards(cards.length.toString());
+                setAvailableCategories(uniqueCategories(cards));
+                setLoading(false);
+            })
+            .catch(error => {
+                console.log(error);
+                onCancel();
+            });
+        }
+    }, [visible]);
+    
+
+    useEffect(() => {
+        let filteredCards = availableCards.filter(card => 
             card.category.some(category => selectedCategories.includes(category))
         );
         setSelectedCards(filteredCards);
@@ -26,31 +43,34 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         if (selectedCategories.length > 0) {
             setNumberOfCards(selectedCards.length.toString());
         } else {
-            setNumberOfCards(avialableCards.length.toString());
-            setSelectedCards(avialableCards)
+            setNumberOfCards(availableCards.length.toString());
+            setSelectedCards(availableCards)
         }
-    }, [selectedCategories, selectedCards, avialableCards]);
+    }, [selectedCategories, selectedCards, availableCards]);
 
     useFocusEffect(
         React.useCallback(() => {
-            setLoading(true);
+            setLoading(true); 
             Firebase.getCards().then(cards => {
                 setAvailableCards(cards);
                 setNumberOfCards(cards.length.toString());
-                setAvailableCategories(uniqueCategories(cards));
+                setAvailableCategories(uniqueCategories);
                 setLoading(false);
             }
-            );
+            )
+            .catch(error => {
+                onCancel();
+                alert(error);
+            })
         }, [])
     );
 
     function cancelSessionPrompt() {
-        onCancel();
         setNumberOfCards("");
         setSelectedCategories([]);
         setAvailableCategories([]);
         setAvailableCards([]);
-        setLoading(true);
+        onCancel();
     }
 
     function onStartPress() {
@@ -68,8 +88,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         cards.forEach(card => {
             categories.push(...card.category);
         });
-        return [...new Set(categories)];
-    }
+        return [...new Set(categories)];}
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
@@ -102,13 +121,12 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
                     style={styles.inputContainer}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
-                    {loading ? (
+                    {loading && availableCards.length === 0 ? (
                         <ActivityIndicator size="large" color="#4a4a8f" />
                     ) : (
                         <>
-                            <Text>{selectedCards.map(card => card.front_text).join(" ")}</Text>
                             <IconButton onPress={cancelSessionPrompt} style={styles.pressableIconBack} iconName='cancel'/>
-                            {avialableCards.length === 0 ? (
+                            {loading ? (
                                 <Text style={styles.inputLabel}>No cards available</Text>
                             ) : (
                                 <>
