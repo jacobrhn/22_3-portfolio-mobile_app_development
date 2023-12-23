@@ -2,25 +2,33 @@ import React, { useState, useEffect, } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
+import Firebase from '../../../components/Firebase';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
-import IconButton from '../../../components/IconButton'; 
-import loadRandomCards from '../../../components/loadRandomCards.js';
+import IconButton from '../../../components/IconButton';
+import NewSession from '../../../components/NewSession';
 
 export default function App() {
 
   const [index, setIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [numCards, setNumCards] = useState(4);
+  const [sessionPromptVisible, setSessionPromptVisible] = useState(false);
   const navigation = useNavigation();
+
 
   useFocusEffect(
     React.useCallback(() => {
       setCards([]);
-      promptForNumberOfCards();
+      setSessionPromptVisible(true);
     }, [])
   );
+
+  let prevIndex = index ? index - 1 : 0;
+  if (prevIndex <= 0) {
+    prevIndex = cards.length - 1;
+  }
 
   const promptForNumberOfCards = () => {
     
@@ -45,9 +53,25 @@ export default function App() {
     );
   };
 
-  let prevIndex = index ? index - 1 : 0;
-  if (prevIndex <= 0) {
-    prevIndex = cards.length - 1;
+  async function loadRandomCards(setCards, numberOfCards) {
+    const cardsFromDb = await Firebase.getCards();
+  
+    if (cardsFromDb.length > 0) {
+      let randomCards = [];
+      for (let i = 0; i < numberOfCards; i++) {
+        let randomIndex = Math.floor(Math.random() * cardsFromDb.length);
+        randomCards.push(cardsFromDb[randomIndex]);
+        cardsFromDb.splice(randomIndex, 1);
+      }
+      setCards(randomCards);
+    } else {
+      Alert.alert(
+        "No cards found",
+        "Please add some cards to your database",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    }
   }
 
   function answerDialog() {
@@ -71,6 +95,12 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <NewSession 
+        visible={sessionPromptVisible} 
+        setVisibility={setSessionPromptVisible}
+        onCancel={() => setSessionPromptVisible(false)} 
+        onStart={setCards} />
+
       
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>

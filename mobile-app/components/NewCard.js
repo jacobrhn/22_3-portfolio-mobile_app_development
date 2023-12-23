@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert } from 'react-native'
+import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, Alert, View, ScrollView, Text, ActivityIndicator} from 'react-native'
 import TextButton from './TextButton';
 import IconButton from './IconButton';
 import Firebase from './Firebase';
@@ -8,20 +8,68 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
     const [inputText1, setInputText1] = useState("");
     const [inputText2, setInputText2] = useState("");
     const [inputText3, setInputText3] = useState("");
-    const [inputCategory, setInputCategory] = useState(""); // to be implemented
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [availableCategories, setAvailableCategories] = useState([]);
     const [inputArchived, setInputArchived] = useState(false); // to be implemented
+    const [loading, setLoading] = useState(false);
 
+    
     useEffect(() => {
         if (editingCard) {
             setInputText1(editingCard.front_text);
             setInputText2(editingCard.back_text);
+            setInputText3(editingCard.text_3);
+            setSelectedCategories(editingCard.category);
         }
     }, [editingCard]);
+
+    function toggleCategory(category) {
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(selectedCategories.filter(c => c !== category));
+            if (!availableCategories.includes(category)) {
+                setAvailableCategories([...availableCategories, category]);
+            }
+        } else {
+            setSelectedCategories([...selectedCategories, category]);
+            setAvailableCategories(availableCategories.filter(c => c !== category));
+        }
+    }
+    
+    function addCategory(category) {
+        if (category && !selectedCategories.includes(category) && !availableCategories.includes(category)) {
+            setSelectedCategories([...selectedCategories, category]);
+        }
+    }
+
+    function inputNewCategory() {
+
+        Alert.prompt(
+            'New Category',
+            'Enter new category name',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: (category) => addCategory(category),
+                },
+            ],
+            'plain-text',
+            '',
+            'default'
+        );
+        
+    }
 
     function cancelEditing() {
         onCancel();
         setInputText1("");
         setInputText2("");
+        setInputText3("");
+        setSelectedCategories([]);
+        setAvailableCategories([]);
     }
 
     function saveCard() {
@@ -40,9 +88,14 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
             alert('Front text cannot exceed 64 characters');
             return;
         }
-        onSave(trimmedText1, trimmedText2, trimmedText3, inputCategory, inputArchived);
+        setLoading(true);
+        onSave(trimmedText1, trimmedText2, trimmedText3, selectedCategories, inputArchived);
+        setLoading(false);
         setInputText1("");
         setInputText2("");
+        setInputText3("");
+        setSelectedCategories([]);
+        setAvailableCategories([]);
     }
 
     function deleteCard() {
@@ -67,7 +120,13 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     style={styles.inputContainer}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#4a4a8f" />
+                        ) : (
+                            <>
+
                     <IconButton onPress={cancelEditing} style={styles.pressableIconBack} iconName='cancel'/>
+                    <Text style={styles.inputLabel}>Front-Side Text:</Text>
                     <TextInput 
                         style={[styles.inputText, styles.inputText1]} 
                         placeholder='front_text'
@@ -77,6 +136,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         value={inputText1}
                         maxLength={256} // Limit maximum length to 256 characters
                     />
+                    <Text style={styles.inputLabel}>Back-Side Text:</Text>
                     <TextInput 
                         style={styles.inputText}
                         placeholder='text2'
@@ -85,14 +145,45 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                         onSubmitEditing={() => {saveCard()}}
                         value={inputText2}
                     />
-                    {/**
-                     *  // TODO: add text3 and category 
-                     */}
+                    <Text style={styles.inputLabel}>Categories:</Text>
+                    <View style={styles.categoriesContainer}>
+                        <ScrollView style={styles.categoriesScrollable} horizontal={true}>
+                            <TextButton 
+                            text="New ..." 
+                            onPress={() => inputNewCategory()} 
+                            pale={true}
+                            style={styles.categoryNew}
+                        />
+                        {selectedCategories.map((category, index) => (
+                            <TextButton 
+                                key={index} 
+                                text={category} 
+                                onPress={() => toggleCategory(category)} 
+                                pale={false}
+                                style={styles.categorySelected}
+                            />
+                        ))}
+                        {availableCategories.map((category, index) => (
+                            <TextButton 
+                                key={index} 
+                                text={category} 
+                                onPress={() => toggleCategory(category)} 
+                                pale={true}
+                                style={styles.categoryUnselected}
+                            />
+                        ))}
+                        </ScrollView>
+
+                    </View>
                     {editingCard ? <TextButton text='Delete' onPress={() => {deleteCard()}} pale={true}/> : null}
                     <TextButton 
                         text='Save' 
                         onPress={() => {saveCard()}}
-                    />
+                    /> 
+                    
+                            </>
+                        )}
+
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </Modal>
@@ -114,17 +205,54 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding: 10,
         textAlignVertical: 'top',
-      },
-      inputText1: {
-        marginTop: 50,
+    },
+    inputText1: {
         height: 150,
-      },
-      inputText2: {
-      },
-      pressableIconBack: {
+    },
+    inputText2: {
+    },
+    pressableIconBack: {
         position: 'absolute',
         top: 10,
         left: 10,
         zIndex: 1,
-      },
+    },
+    categoriesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        width: '80%',
+
+    },
+    categoryNew: {
+        borderWidth:0,
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categoryUnselected: {
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categorySelected: {
+        padding: 5,
+        margin: 2,
+        width: 'auto',
+        height: 40,
+    },
+    categoriesScrollable: {
+        height: 100,
+    },
+    inputLabel: {
+        marginTop: 10,
+        fontSize: 16,
+        fontStyle: 'italic',
+        color: '#333',
+        marginBottom: 2,
+        fontWeight: '400',
+        alignSelf: 'flex-start',
+        marginLeft: '10%',
+    },
 })
