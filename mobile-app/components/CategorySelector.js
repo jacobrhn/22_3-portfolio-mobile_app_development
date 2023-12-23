@@ -25,6 +25,7 @@ export default CategorySelector = ({ buttonText = null, buttonAction = null, sel
                         onPress={() => buttonAction()} 
                         pale={true}
                         style={styles.categoryNew}
+                        textStyle={{textDecorationLine: 'underline'}}
                     />
                 ) : null}
 
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     categoryNew: {
-        borderWidth:1,
+        borderWidth:0,
         padding: 5,
         margin: 2,
         width: 'auto',
