@@ -56,14 +56,8 @@ export default function App() {
     const answeredCard = cards[index];
     setCards(newCards);
     setCardsAnsweredCorrect(prevCards => [...prevCards, answeredCard]);
-  
-    if (newCards.length > 0) {
-      setIndex(prevIndex => (prevIndex + 1) % newCards.length);
-    } else {
-      setIndex(0);
-      setSessionPromptVisible(true);
+    setIndex(0);
     }
-  }
   
   function incorrectAnswer() {
     console.log('incorrect answer');
@@ -71,13 +65,7 @@ export default function App() {
     const answeredCard = cards[index];
     setCards(newCards);
     setCardsAnsweredIncorrect(prevCards => [...prevCards, answeredCard]);
-  
-    if (newCards.length > 0) {
-      setIndex(prevIndex => (prevIndex + 1) % newCards.length);
-    } else {
-      setIndex(0);
-      setSessionPromptVisible(true);
-    }
+    setIndex(0);
   }
 
 
