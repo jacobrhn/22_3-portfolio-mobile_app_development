@@ -2,6 +2,7 @@
 _Erarbeitet im Rahmen des Modulbausteins "Moderne Programmierkonzepte" im 3. Semester des Studiengangs WWI22 bei Prof. Dr. Behrens (@behrends) an der @DHBWLoerrach_
 
 _Bearbeitet von: Jacob Ruhnau im Dezember 2023_
+_[ruhnauja@dhbw-loarrach.de](mailto:ruhnauja@dhbw-loarrach.de)_
 
 ---
 #### TABLE OF CONTENTS
@@ -29,6 +30,10 @@ Unverhergesehen wurde die Gruppe auf eine Person reduziert, weshalb vereinbart w
 
 React-Native wurde als Framework gewählt, da es eine gute Möglichkeit bietet, eine App für Android und iOS zu entwickeln. 
 Diese App wurde allerdings bisher nur auf iOS 17.2 getestet innerhalb des expo-routers auf einem emulierten iPhone 15 innerhalb des X-Code Emulators (iOS 17.2).
+
+Die App wurde mit Hilfe von [Expo](https://expo.io/) entwickelt, weshalb die App auch nur mit Hilfe von Expo gestartet werden kann. 
+
+Die App befindet sich in `mobile-app/`, von dort kann sie mit `expo start` gestartet werden.
 
 ### Übersicht der Requirements
 Requirement                    | Kategorie  | Implementation | Dokumentation
