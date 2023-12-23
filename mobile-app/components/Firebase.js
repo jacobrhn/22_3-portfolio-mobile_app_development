@@ -1,18 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, deleteDoc , doc , setDoc} from 'firebase/firestore';
 
-// Optionally import the services that you want to use
-// import {...} from "firebase/auth";
-// import {...} from "firebase/database";
-// import { getFirestore } from "firebase/firestore";
-// import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
-
-// Initialize Firebase
 const firebaseConfig = {
-
-
     apiKey: "AIzaSyDg8gPBTE7WIagKyrW-WYUx-uw7c_ByZgo",
     authDomain: "rnapp-learnigcards.firebaseapp.com",
     databaseURL: 'https://rnapp-learnigcards.firebaseio.com',
@@ -44,7 +33,6 @@ export default class Firebase{
                 archived: doc.data().archived,
             });
         });
-        // console.log("Firebase.getCards(): \n", cards, "\n------------------")
         return cards;
     }
 

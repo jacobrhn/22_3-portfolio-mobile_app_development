@@ -132,7 +132,7 @@ export default function NewCard({visible, onCancel, onSave, editingCard, cards, 
                     returnKeyType='next'
                     onChangeText={setInputText1}
                     value={inputText1}
-                    maxLength={256} // Limit maximum length to 256 characters
+                    maxLength={256}
                 />
                 <Text style={styles.inputLabel}>Back-Side Text:</Text>
                 <TextInput 
