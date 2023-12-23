@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, View, ScrollView, Text} from 'react-native'
@@ -54,13 +54,13 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             Firebase.getCards().then(cards => {
                 setAvailableCards(cards);
                 setNumberOfCards(cards.length.toString());
-                setAvailableCategories(uniqueCategories(cards));
+                setAvailableCategories(uniqueCategories);
                 setLoading(false);
             }
             )
             .catch(error => {
-                console.log(error);
                 onCancel();
+                alert(error);
             })
         }, [])
     );
@@ -88,8 +88,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
         cards.forEach(card => {
             categories.push(...card.category);
         });
-        return [...new Set(categories)];
-    }
+        return [...new Set(categories)];}
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
