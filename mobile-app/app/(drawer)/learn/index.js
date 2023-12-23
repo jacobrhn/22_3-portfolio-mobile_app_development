@@ -1,8 +1,7 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
-import { useNavigation, useFocusEffect} from '@react-navigation/native';
-import Firebase from '../../../components/Firebase';
+import { useNavigation } from '@react-navigation/native';
 
 import Card from '../../../components/Card';
 import TextButton from '../../../components/TextButton';
@@ -17,12 +16,6 @@ export default function App() {
   const [cardsAnsweredCorrect, setCardsAnsweredCorrect] = useState([]);// TODO
   const [cardsAnsweredIncorrect, setCardsAnsweredIncorrect] = useState([]);// TODO
   const navigation = useNavigation();
-
-  useEffect(() => {
-    setCardsAnsweredCorrect([]);
-    setCardsAnsweredIncorrect([]);
-  }, []);
-
 
   let prevIndex = index ? index - 1 : 0;
   if (prevIndex <= 0) {
@@ -58,7 +51,11 @@ export default function App() {
     setIndex(0);
   }
 
-
+  function startSession(newCards) {
+    setCards(newCards);
+    setCardsAnsweredCorrect([]);
+    setCardsAnsweredIncorrect([]);
+}
 
   let content = 
     <View style={styles.noCards}>
@@ -85,7 +82,7 @@ export default function App() {
         visible={sessionPromptVisible} 
         setVisibility={setSessionPromptVisible}
         onCancel={() => setSessionPromptVisible(false)} 
-        onStart={setCards} 
+        onStart={startSession} 
       />
       <View style={styles.topNavigationContainer}>
         <Text style={styles.front_text}>learn</Text>
