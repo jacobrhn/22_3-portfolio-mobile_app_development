@@ -83,6 +83,3 @@ const styles = StyleSheet.create({
         height: 100,
     }
 })
-
-
-What is the best method to develop a multi-plattform mobile app?112345
