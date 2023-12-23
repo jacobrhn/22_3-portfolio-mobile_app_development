@@ -1,5 +1,5 @@
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, Pressable, View, StyleSheet } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
+import { Pressable } from "react-native";
 
 /**
  * @description Supports MaterialIcons, also see https://icons.expo.fyi/Index
