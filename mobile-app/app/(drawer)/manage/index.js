@@ -9,6 +9,7 @@ import NewCard from '../../../components/NewCard';
 import IconButton from '../../../components/IconButton';
 import ManageCardsListItem from '../../../components/ManageCard';
 import Firebase from '../../../components/Firebase';
+import CategoryFilter from '../../../components/CategoryFilter';
 
 export default function App() {
 
@@ -16,6 +17,8 @@ export default function App() {
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
   const navigation = useNavigation();
+  const [filterCategories, setFilterCategories] = useState([]);
+
   
 
   useFocusEffect(
@@ -58,6 +61,23 @@ export default function App() {
     setShowInputDialog(true);
   }
 
+  function getUniqueCategories(cards) {
+    let allCategories = [];
+    cards.forEach(card => {
+        allCategories = [...allCategories, ...card.category];
+    });
+    const uniqueCategories = [...new Set(allCategories)];
+    return uniqueCategories;
+  }
+
+  function onCategorySelect(category) {
+    if (filterCategories.includes(category)) {
+        setFilterCategories(filterCategories.filter(c => c !== category));
+    } else {
+        setFilterCategories([...filterCategories, category]);
+    }
+}
+
   content = 
     <View style={styles.noCards}>
       <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
@@ -95,10 +115,13 @@ export default function App() {
         // database={database}
       />
       </View>
+      <View>
+      <CategoryFilter categories={getUniqueCategories(cards)} onCategorySelect={onCategorySelect} />
+      </View>
       <View style={styles.displayAllCardsContainer}>
         {cards.length > 0 ? (
           <FlatList
-            data={cards}
+            data={filterCategories.length > 0 ? cards.filter(card => card.category.some(c => filterCategories.includes(c))) : cards}
             style={{ width: '95%'}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
@@ -184,4 +207,14 @@ const styles = StyleSheet.create({
     height: '80%',
     alignItems: 'center',
   },
+  filterContainer: {
+    width: '95%',
+    marginVertical: 10,
+},
+flatList: {
+    marginBottom: 10,
+},
+categoryFilter: {
+    marginTop: 10,
+},
 });
