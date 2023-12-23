@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet} from 'react-native';
-import TextButton from './TextButton'; // Adjust this import as needed
+import TextButton from './TextButton';
 
-export default CategorySelector = ({ buttonText, buttonAction, selectedCategories, availableCategories, setSelectedCategories, setAvailableCategories }) => {
+export default CategorySelector = ({ buttonText = null, buttonAction = null, selectedCategories, availableCategories, setSelectedCategories, setAvailableCategories }) => {
 
     function toggleCategory(category) {
         if (selectedCategories.includes(category)) {
@@ -19,12 +19,15 @@ export default CategorySelector = ({ buttonText, buttonAction, selectedCategorie
     return (
         <View style={styles.categoriesContainer}>
             <ScrollView style={styles.categoriesScrollable} horizontal={true}>
-                <TextButton 
-                    text={buttonText}
-                    onPress={() => buttonAction()} 
-                    pale={true}
-                    style={styles.categoryNew}
-                />
+                {buttonAction && buttonText ?(
+                        <TextButton 
+                        text={buttonText}
+                        onPress={() => buttonAction()} 
+                        pale={true}
+                        style={styles.categoryNew}
+                    />
+                ) : null}
+
                 {selectedCategories.map((category, index) => (
                     <TextButton 
                         key={index} 
