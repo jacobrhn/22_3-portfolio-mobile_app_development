@@ -1,15 +1,4 @@
 
-
-  /**
-   * @workspace in components/NewSession the following should be implemented: 
-   * This Modal Starts a complex session of learning cards. 
-   * The method will be called in useFocusEffect from learn/index.js or when a user manually start a ne session.
-   * it will first load the cards from db. when it knows, that at least 2 cards are avialable. it will ask the user for the categories he wants to learn.
-   * the categories available for selection are the categories of the cards that are loaded from db.
-   * when we know how many cards are available for the selected categories, we will ask the user how many cards he wants to learn while the maximum is the number of cards available for the selected categories.
-   * it should be implemented in a 
-   */
-
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
@@ -40,6 +29,7 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
             setNumberOfCards(selectedCards.length.toString());
         } else {
             setNumberOfCards(avialableCards.length.toString());
+            setSelectedCards(avialableCards)
         }
     }, [selectedCategories, selectedCards, avialableCards]);
 
@@ -66,21 +56,6 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
     }
 
     function onStartPress() {
-        if (numberOfCards === "" && selectedCategories.length === 0) {
-            Alert.alert(
-                "Error",
-                "Please enter a number of cards or at least one category you want to learn",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => console.log("OK Pressed"),
-                    },
-                ],
-                { cancelable: false }
-            );
-            return;
-        }
-        
         const randomizedCards = randomCards();
         onStart(randomizedCards);
         setVisibility(false);
@@ -111,18 +86,16 @@ export default function NewSession({visible, setVisibility, onCancel, onStart}) 
 
     }
 
-    function randomCards() {     
-        let filteredCards = selectedCards.filter(card => selectedCategories.includes(card.category)); 
-        setAvailableCards(filteredCards);
+    function randomCards() {
+        let selectedCards_copy = [...selectedCards];
         let randomCards = [];
         for (let i = 0; i < numberOfCards; i++) {
-        let randomIndex = Math.floor(Math.random() * selectedCards.length);
-        randomCards.push(selectedCards[randomIndex]);
-        selectedCards.splice(randomIndex, 1);
+            let randomIndex = Math.floor(Math.random() * selectedCards_copy.length);
+            randomCards.push(selectedCards_copy[randomIndex]);
+            selectedCards_copy = selectedCards_copy.filter((_, index) => index !== randomIndex);
         }
         return randomCards;
-
-      }
+    }
     
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={cancelSessionPrompt}>
