@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import{ Modal, StyleSheet, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, View, ScrollView, Text} from 'react-native'
