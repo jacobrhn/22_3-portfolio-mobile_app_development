@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Alert, TouchableOpacity , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView,TouchableOpacity, ActivityIndicator} from 'react-native';
 import { useNavigation, useFocusEffect} from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -20,6 +20,7 @@ export default function App() {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedFilterCategories, setSelectedFilterCategories] = useState([]);
   const [availableFilterCategories, setAvailableFilterCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setAvailableFilterCategories(getUniqueCategories(cards));
@@ -27,7 +28,7 @@ export default function App() {
 
   useFocusEffect(
     React.useCallback(() => {
-      setEditingCard(null);
+      setEditingCard(false);
       Firebase.init();
       loadCards();
     }, [])
@@ -58,6 +59,7 @@ export default function App() {
   async function loadCards() {
     const cards = await Firebase.getCards();
     setCards(cards);
+    setLoading(false);
   }
 
   function onCardClick(card) { 
@@ -69,8 +71,6 @@ export default function App() {
     setSelectedFilterCategories([]);
     setAvailableFilterCategories(getUniqueCategories(cards));
   }
-
-
 
   function getUniqueCategories(cards) {
     let allCategories = [];
@@ -112,52 +112,58 @@ export default function App() {
         editingCard={editingCard}
         cards={cards}
         setCards={setCards} 
-        saveCards={saveCards} 
-        // TODO adjust for Firebase
-        // database={database}
+        saveCards={saveCards}
       />
       </View>
       <View style={styles.displayAllCardsContainer}>
-        {cards.length > 0 ? (
-          <>
-          <View style={styles.filterExpandable}>
-            <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
-              <InputLabel label='Expand Filter' styles={{marginLeft: "2%"}}/>
-            </TouchableOpacity>
-            {showFilter && (
-              <>
-                <View style={styles.filterContainer}>
-                <View>
-                  <CategorySelector 
-                  buttonText='Clear'
-                  buttonAction={clearFilters} 
-                  selectedCategories={selectedFilterCategories} 
-                  availableCategories={availableFilterCategories}
-                  setSelectedCategories={setSelectedFilterCategories}
-                  setAvailableCategories={setAvailableFilterCategories}
-                />
-                </View>
-                </View>
-              </>
-          )}
-          </View>
-
-          <FlatList
-            data={selectedFilterCategories.length > 0 ? cards.filter(card => card.category.some(c => selectedFilterCategories.includes(c))) : cards}
-            style={{ width: '95%'}}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
-            <ManageCardsListItem card={item} onPress={onCardClick} />
-            )}
-          />
-          
-          </>
+      {loading && cards.length === 0 ? (
+        <ActivityIndicator size="large" color="#4a4a8f" />
         ) : (
-          <View style={styles.noCards}>
-            <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
-          </View>
+            <>
+            
+              {cards.length > 0 ? (
+                <>
+                <View style={styles.filterExpandable}>
+                  <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
+                    <InputLabel label='Expand Filter' styles={{marginLeft: "2%"}}/>
+                  </TouchableOpacity>
+                  {showFilter && (
+                    <>
+                      <View style={styles.filterContainer}>
+                      <View>
+                        <CategorySelector 
+                        buttonText='Clear'
+                        buttonAction={clearFilters} 
+                        selectedCategories={selectedFilterCategories} 
+                        availableCategories={availableFilterCategories}
+                        setSelectedCategories={setSelectedFilterCategories}
+                        setAvailableCategories={setAvailableFilterCategories}
+                      />
+                      </View>
+                      </View>
+                    </>
+                )}
+                </View>
+
+                <FlatList
+                  data={selectedFilterCategories.length > 0 ? cards.filter(card => card.category.some(c => selectedFilterCategories.includes(c))) : cards}
+                  style={{ width: '95%'}}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                  <ManageCardsListItem card={item} onPress={onCardClick} />
+                  )}
+                />
+                
+                </>
+              ) : (
+                <View style={styles.noCards}>
+                  <Text style={styles.noCardsText}>Add your first card by hitting the plus icon.</Text>
+                </View>
+              )}
+            
+            </>
         )}
-      </View>
+        </View>
       <View style={styles.cardNavigationContainer}>
         {/* ... */}
       </View>
