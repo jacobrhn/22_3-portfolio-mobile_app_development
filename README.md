@@ -12,9 +12,11 @@ _Bearbeitet von: Jacob Ruhnau; Oktober-Dezember 2023_
 Im Rahmen des Studienschwerpunkts "Moderne Programmierkonzepte" an der DHBW Lörrach wurde die Aufgabe gestellt, eine App zu entwickeln, die es dem User ermöglicht. Es gab die Möglichkeit sich hierfür einen Usecase selbst zu bestimmen, in diesem Ansatz wurde der Vorschlag übernommen, welcher im Rahmen der Vorlesung angeboten wurde. Dieser Beschreibt eine Karteikarten App (vgl. [Requirements](docs/requirements.md)). 
 Zielsetzung war es, dass alle MustHave-Requirements umgesetzt werden, wobei die Umsetzung durch zwei Personen erfolgen sollte.
 
-
 ### Besonderheiten
 Unverhergesehen wurde die Gruppe auf eine Person reduziert, weshalb vereinbart wurde, dass zum Bestehen die Hälfte der Must-Have-Requirements umgesetzt werden muss. Die Umsetzung der Nice-To-Have-Requirements ist optional und kann zu einer Notenaufwertung führen.
+
+React-Native wurde als Framework gewählt, da es eine gute Möglichkeit bietet, eine App für Android und iOS zu entwickeln. 
+Diese App wurde allerdings bisher nur auf iOS 17.2 getestet innerhalb des expo-routers auf einem emulierten iPhone 15 innerhalb des X-Code Emulators (iOS 17.2).
 
 ### Übersicht der Requirements
 Requirement                    | Kategorie  | Implementation | Dokumentation
